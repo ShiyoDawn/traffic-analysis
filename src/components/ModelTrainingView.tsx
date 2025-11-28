@@ -556,11 +556,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               form={form}
               layout="vertical"
               initialValues={{
-                model_name: 'cnn1d',
                 train_csv: '../data/output/train_samples_seq200_out5_overlap1_testevery5.csv',
                 test_csv: '../data/output/test_samples_seq200_out5_overlap1_testevery5.csv',
-                optimizer_name: 'adam',
-                loss_name: 'mse',
                 lr: 0.001,
                 batch_size: 32,
                 epochs: 3,
@@ -572,19 +569,16 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               }}
             >
               <Form.Item label="模型名称" name="model_name" rules={[{ required: true }]}>
-                <Select>
-                  <Select.Option value="mlp">MLP</Select.Option>
+                <Select placeholder="请选择模型" allowClear>
                   <Select.Option value="cnn1d">CNN1D</Select.Option>
-                  <Select.Option value="rnn">RNN</Select.Option>
                   <Select.Option value="lstm">LSTM</Select.Option>
                   <Select.Option value="gru">GRU</Select.Option>
-                  <Select.Option value="tcn">TCN</Select.Option>
                   <Select.Option value="transformer">Transformer</Select.Option>
                 </Select>
               </Form.Item>
 
               <Form.Item label="训练数据路径" name="train_csv" rules={[{ required: true }]}>
-                <Input placeholder="训练数据CSV文件路径" />
+                <Input placeholder="训练数据CSV文件路径" allowClear/>
               </Form.Item>
 
               <Form.Item label="测试数据路径" name="test_csv" rules={[{ required: true }]}>
@@ -592,49 +586,50 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               </Form.Item>
 
               <Form.Item label="优化器" name="optimizer_name" rules={[{ required: true }]}>
-                <Select>
+                <Select placeholder="请选择优化器" allowClear>
                   <Select.Option value="adam">Adam</Select.Option>
-                  <Select.Option value="adamw">AdamW</Select.Option>
                   <Select.Option value="sgd">SGD</Select.Option>
                   <Select.Option value="rmsprop">RMSprop</Select.Option>
                 </Select>
               </Form.Item>
 
               <Form.Item label="损失函数" name="loss_name" rules={[{ required: true }]}>
-                <Select>
+                <Select placeholder="请选择损失函数" allowClear>
                   <Select.Option value="mse">MSE</Select.Option>
                   <Select.Option value="mae">MAE</Select.Option>
                   <Select.Option value="huber">Huber</Select.Option>
-                  <Select.Option value="smoothl1">Smoothl1</Select.Option>
-                  <Select.Option value="smape">SMAPE</Select.Option>
                 </Select>
               </Form.Item>
 
               <Form.Item label="学习率" name="lr" rules={[{ required: true }]}>
-                <InputNumber min={0.0001} max={0.1} step={0.0001} style={{ width: '100%' }} />
+                <InputNumber min={0.0001} max={0.1} step={0.0001} style={{ width: '100%' }} 
+                    placeholder="请输入0.0001-0.1之间的数字"/>
               </Form.Item>
 
               <Form.Item label="批次大小" name="batch_size" rules={[{ required: true }]}>
-                <InputNumber min={1} max={256} style={{ width: '100%' }} />
+                <InputNumber min={1} max={256} style={{ width: '100%' }} 
+                    placeholder="请输入1-256之间的数字"/>
               </Form.Item>
 
               <Form.Item label="训练轮数" name="epochs" rules={[{ required: true }]}>
-                <InputNumber min={1} max={1000} style={{ width: '100%' }} />
+                <InputNumber min={1} max={1000} style={{ width: '100%' }}
+                    placeholder="请输入1-1000之间的数字"/>
               </Form.Item>
 
-              <Form.Item label="早停策略" name="early_stop" valuePropName="checked">
-                <Select>
+              <Form.Item label="早停策略" name="early_stop" valuePropName="checked" >
+                <Select placeholder="请选择早停策略（默认启用）" allowClear>
                   <Select.Option value={true}>启用</Select.Option>
                   <Select.Option value={false}>禁用</Select.Option>
                 </Select>
               </Form.Item>
 
               <Form.Item label="早停耐心值" name="patience" rules={[{ required: true }]}>
-                <InputNumber min={1} max={50} style={{ width: '100%' }} />
+                <InputNumber min={1} max={50} style={{ width: '100%' }} 
+                    placeholder="请输入1-50之间的数字"/>
               </Form.Item>
 
               <Form.Item label="保存图表" name="plot_figures" valuePropName="checked">
-                <Select>
+                <Select placeholder="请选择是否保存图表（默认不保存）" allowClear>
                   <Select.Option value={true}>是</Select.Option>
                   <Select.Option value={false}>否</Select.Option>
                 </Select>
@@ -645,7 +640,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               </Form.Item>
 
               <Form.Item label="直方图bins" name="bins">
-                <InputNumber min={10} max={200} style={{ width: '100%' }} />
+                <InputNumber min={10} max={200} style={{ width: '100%' }} 
+                    placeholder="请输入10-200之间的数字"/>
               </Form.Item>
 
               <Form.Item>
@@ -675,19 +671,13 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               }}
             >
               <Form.Item label="模型名称" name="model_name" rules={[{ required: true }]}>
-                <Select>
-                  <Select.Option value="linear">Linear</Select.Option>
+                <Select placeholder="请选择模型" allowClear>
                   <Select.Option value="ridge">Ridge</Select.Option>
                   <Select.Option value="lasso">Lasso</Select.Option>
-                  <Select.Option value="elasticnet">Elasticnet</Select.Option>
-                  <Select.Option value="rf">Random Forest</Select.Option>
-                  <Select.Option value="extratrees">Extratrees</Select.Option>
-                  <Select.Option value="gboost">GBOOST</Select.Option>
+                  <Select.Option value="random_forest">Random Forest</Select.Option>
+                  <Select.Option value="gbdt">GBDT</Select.Option>
+                  <Select.Option value="xgboost">XGBoost</Select.Option>
                   <Select.Option value="lightgbm">LightGBM</Select.Option>
-                  <Select.Option value="xgboost">Xgboost</Select.Option>
-                  <Select.Option value="catboost">Catboost</Select.Option>
-                  <Select.Option value="svr">SVR</Select.Option>
-                  <Select.Option value="mlp">MLP</Select.Option>
                 </Select>
               </Form.Item>
 
@@ -700,18 +690,19 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               </Form.Item>
 
               <Form.Item label="批次大小" name="batch_size" rules={[{ required: true }]}>
-                <InputNumber min={1} max={1024} style={{ width: '100%' }} />
+                <InputNumber min={1} max={1024} style={{ width: '100%' }} 
+                    placeholder="请输入1-1024之间的数字"/>
               </Form.Item>
 
               <Form.Item label="详细输出" name="verbose" valuePropName="checked">
-                <Select>
+                <Select placeholder="请选择是否详细（默认详细输出）" allowClear>
                   <Select.Option value={true}>是</Select.Option>
                   <Select.Option value={false}>否</Select.Option>
                 </Select>
               </Form.Item>
 
               <Form.Item label="保存图表" name="plot_figures" valuePropName="checked">
-                <Select>
+                <Select placeholder="请选择是否保存图表（默认不保存）" allowClear>
                   <Select.Option value={true}>是</Select.Option>
                   <Select.Option value={false}>否</Select.Option>
                 </Select>
@@ -722,7 +713,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               </Form.Item>
 
               <Form.Item label="直方图bins" name="bins">
-                <InputNumber min={10} max={200} style={{ width: '100%' }} />
+                <InputNumber min={10} max={200} style={{ width: '100%' }} 
+                    placeholder="请输入10-200之间的数字"/>
               </Form.Item>
 
               <Form.Item label="预测结果保存路径" name="save_preds_path">
@@ -756,7 +748,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               }}
             >
               <Form.Item label="模型名称" name="model_name" rules={[{ required: true }]}>
-                <Select>
+                <Select placeholder="请选择模型" allowClear>
                   <Select.Option value="persistence">Persistence (持续性)</Select.Option>
                   <Select.Option value="moving_avg">Moving Average (移动平均)</Select.Option>
                   <Select.Option value="exp_smooth">Exponential Smoothing (指数平滑)</Select.Option>
@@ -776,22 +768,23 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               </Form.Item>
 
               <Form.Item label="批次大小" name="batch_size" rules={[{ required: true }]}>
-                <InputNumber min={1} max={1024} style={{ width: '100%' }} />
+                <InputNumber min={1} max={1024} style={{ width: '100%' }} 
+                    placeholder="请输入1-1024之间的数字"/>
               </Form.Item>
 
               <Form.Item label="详细输出" name="verbose" valuePropName="checked">
-                <Select>
+                <Select placeholder="请选择是否保存图表（默认详细输出）" allowClear>
                   <Select.Option value={true}>是</Select.Option>
                   <Select.Option value={false}>否</Select.Option>
                 </Select>
               </Form.Item>
 
               <Form.Item label="最大显示点数" name="max_display_points">
-                <InputNumber min={1000} max={50000} style={{ width: '100%' }} />
+                <InputNumber min={1000} max={50000} style={{ width: '100%' }} placeholder="请输入1000-50000之间的数字"/>
               </Form.Item>
 
               <Form.Item label="保存图表" name="plot_figures" valuePropName="checked">
-                <Select>
+                <Select placeholder="请选择是否保存图表（默认不保存图表）" allowClear>
                   <Select.Option value={true}>是</Select.Option>
                   <Select.Option value={false}>否</Select.Option>
                 </Select>
@@ -802,7 +795,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               </Form.Item>
 
               <Form.Item label="直方图bins" name="bins">
-                <InputNumber min={10} max={200} style={{ width: '100%' }} />
+                <InputNumber min={10} max={200} style={{ width: '100%' }} 
+                    placeholder="请输入10-200之间的数字"/>
               </Form.Item>
 
               <Form.Item>
@@ -849,30 +843,33 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               </Form.Item>
 
               <Form.Item label="批次大小" name="batch_size" rules={[{ required: true }]}>
-                <InputNumber min={1} max={128} style={{ width: '100%' }} />
+                <InputNumber min={1} max={128} style={{ width: '100%' }} 
+                    placeholder="请输入1-128之间的数字"/>
               </Form.Item>
 
               <Form.Item label="学习率" name="lr" rules={[{ required: true }]}>
-                <InputNumber min={0.00001} max={0.01} step={0.00001} style={{ width: '100%' }} />
+                <InputNumber min={0.00001} max={0.01} step={0.00001} style={{ width: '100%' }} 
+                    placeholder="请输入0.00001-0.01之间的数字"/>
               </Form.Item>
 
               <Form.Item label="样本数量" name="sample_size" rules={[{ required: true }]}>
-                <InputNumber min={100} max={50000} style={{ width: '100%' }} />
+                <InputNumber min={100} max={50000} style={{ width: '100%' }} placeholder="请输入100-50000之间的数字"/>
               </Form.Item>
 
               <Form.Item label="保存图表" name="plot_figures" valuePropName="checked">
-                <Select>
+                <Select placeholder="请选择是否保存图表（默认不保存图表）" allowClear>
                   <Select.Option value={true}>是</Select.Option>
                   <Select.Option value={false}>否</Select.Option>
                 </Select>
               </Form.Item>
 
               <Form.Item label="直方图bins" name="bins">
-                <InputNumber min={10} max={200} style={{ width: '100%' }} />
+                <InputNumber min={10} max={200} style={{ width: '100%' }} 
+                    placeholder="请输入10-200之间的数字"/>
               </Form.Item>
 
               <Form.Item label="最大显示点数" name="max_points">
-                <InputNumber min={1000} max={50000} style={{ width: '100%' }} />
+                <InputNumber min={1000} max={50000} style={{ width: '100%' }} placeholder="请输入1000-50000之间的数字"/>
               </Form.Item>
 
               <Form.Item>
@@ -1000,7 +997,9 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               </Form.Item>
 
               <Form.Item label="Bins数量" name="bins">
-                <InputNumber min={1} placeholder="50" style={{ width: '100%' }} />
+                <InputNumber min={1} placeholder="50" style={{ width: '100%' }} 
+                    // placeholder="请输入1-50之间的数字"
+                    />
               </Form.Item>
 
               <Form.Item>

@@ -11,6 +11,7 @@ import {
   message,
   Spin,
 } from 'antd';
+import {SafetyCertificateOutlined} from '@ant-design/icons';
 import type { CityConfig } from '../App';
 
 const { Sider, Content } = Layout;
@@ -116,8 +117,6 @@ const DataProcessingView: React.FC<DataProcessingViewProps> = ({
                 layout="vertical"
                 onFinish={handleClean}
                 initialValues={{
-                  outlier_method: 'iqr',
-                  fill_method: 'interpolate',
                   window_size: 50,
                   z_thresh: 3.0,
                 }}
@@ -137,7 +136,7 @@ const DataProcessingView: React.FC<DataProcessingViewProps> = ({
                   label="异常值检测方法"
                   name="outlier_method"
                 >
-                  <Select>
+                  <Select placeholder="请选择异常值检测方法" allowClear>
                     <Option value="iqr">IQR (四分位距)</Option>
                     <Option value="zscore">Z-Score (Z分数)</Option>
                     <Option value="window">Window (滑动窗口)</Option>
@@ -148,7 +147,7 @@ const DataProcessingView: React.FC<DataProcessingViewProps> = ({
                   label="缺失值填补方法"
                   name="fill_method"
                 >
-                  <Select>
+                  <Select placeholder="请选择缺失值填补方法" allowClear>
                     <Option value="mean">均值填充</Option>
                     <Option value="median">中位数填充</Option>
                     <Option value="ffill">前向填充</Option>
@@ -251,6 +250,7 @@ const DataProcessingView: React.FC<DataProcessingViewProps> = ({
             </Card>
           ) : (
             <div style={{ textAlign: 'center', padding: '50px', color: '#999' }}>
+              <SafetyCertificateOutlined style={{ fontSize: '48px', marginBottom: '16px' }} />
               <Typography.Title level={4} style={{ color: '#999' }}>
                 请配置参数并开始数据清洗
               </Typography.Title>

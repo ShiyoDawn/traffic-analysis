@@ -8,6 +8,7 @@ import DataGenerationView from './components/DataGenerationView';
 import ModelTrainingView from './components/ModelTrainingView';
 import ModelPredictionView from './components/ModelPredictionView';
 import './App.css';
+import StartView from './components/StartView';
 
 export type CityType = 'milan' | 'trento';
 
@@ -22,53 +23,51 @@ export interface CityConfig {
 const { Header } = Layout;
 const { Title } = Typography;
 
-const HEADER_HEIGHT = 64;
-
 // 城市数据配置
 export const MILAN_CITIES = [
-  'ADRIANO', 'AFFORI', 'ASSIANO', 'BAGGIO', 'BANDE NERE', 'BARONA', 'BICOCCA', 'BOLDINASCO', 
-  'BOSCOINCITTA', 'BOVISA', 'BOVISASCA', 'BRERA', 'BRUZZANO', 'BUENOS AIRES', 'CALVAIRATE', 
-  'CANTALUPA', 'CASCINA MERLATA', 'CHIARAVALLE', 'CIMIANO', 'CITTA STUDI', 'COMASINA', 
-  'CONCA DEL NAVIGLIO', 'CONCA FALLATA', 'CONCHETTA', 'CORSICA', 'DE ANGELI', 'DEI NAVIGLI', 
-  'DELLE ABBAZIE', 'DERGANO', 'DUOMO', 'FARINI', 'FATIMA', 'FIGINO', 'FORLANINI', 'FORZE ARMATE', 
-  'GHISOLFA', 'GIAMBELLINO', 'GIARDINI', 'GORLA', 'GRATOSOGLIO', 'GRECO', 'GUASTALLA', 
-  'IPPODROMI', 'ISOLA', 'LAMBRATE', 'LAMPUGNANO', 'LODI', 'LODOVICO IL MORO', 'LORENTEGGIO', 
-  'LORETO', 'MACIACHINI', 'MAGENTA', 'MAGGIORE', 'MONCUCCO', 'MONLUE', 'MORIVIONE', 'MUGGIANO', 
-  'MUSOCCO', 'NIGUARDA', 'ORTOMERCATO', 'PADOVA', 'PAGANO', 'PARCO FORLANINI', 'PARCO NORD', 
-  'PARCO SEMPIONE', 'PONTE SEVESO', 'PORTA GARIBALDI', 'PORTA GENOVA', 'PORTA LODOVICA', 
-  'PORTA MAGENTA', 'PORTELLO', 'PTA ROMANA', 'QT 8', 'QUARTO CAGNINO', 'QUINTO ROMANO', 
-  'QUINTOSOLE', 'RONCHETTO DELLE RANE', 'ROSERIO', 'SAN SIRO', 'SANTA GIULIA', 'SARPI', 
+  'ADRIANO', 'AFFORI', 'ASSIANO', 'BAGGIO', 'BANDE NERE', 'BARONA', 'BICOCCA', 'BOLDINASCO',
+  'BOSCOINCITTA', 'BOVISA', 'BOVISASCA', 'BRERA', 'BRUZZANO', 'BUENOS AIRES', 'CALVAIRATE',
+  'CANTALUPA', 'CASCINA MERLATA', 'CHIARAVALLE', 'CIMIANO', 'CITTA STUDI', 'COMASINA',
+  'CONCA DEL NAVIGLIO', 'CONCA FALLATA', 'CONCHETTA', 'CORSICA', 'DE ANGELI', 'DEI NAVIGLI',
+  'DELLE ABBAZIE', 'DERGANO', 'DUOMO', 'FARINI', 'FATIMA', 'FIGINO', 'FORLANINI', 'FORZE ARMATE',
+  'GHISOLFA', 'GIAMBELLINO', 'GIARDINI', 'GORLA', 'GRATOSOGLIO', 'GRECO', 'GUASTALLA',
+  'IPPODROMI', 'ISOLA', 'LAMBRATE', 'LAMPUGNANO', 'LODI', 'LODOVICO IL MORO', 'LORENTEGGIO',
+  'LORETO', 'MACIACHINI', 'MAGENTA', 'MAGGIORE', 'MONCUCCO', 'MONLUE', 'MORIVIONE', 'MUGGIANO',
+  'MUSOCCO', 'NIGUARDA', 'ORTOMERCATO', 'PADOVA', 'PAGANO', 'PARCO FORLANINI', 'PARCO NORD',
+  'PARCO SEMPIONE', 'PONTE SEVESO', 'PORTA GARIBALDI', 'PORTA GENOVA', 'PORTA LODOVICA',
+  'PORTA MAGENTA', 'PORTELLO', 'PTA ROMANA', 'QT 8', 'QUARTO CAGNINO', 'QUINTO ROMANO',
+  'QUINTOSOLE', 'RONCHETTO DELLE RANE', 'ROSERIO', 'SAN SIRO', 'SANTA GIULIA', 'SARPI',
   'SCALO ROMANA', 'STEPHENSON', 'TIBALDI', 'TRE TORRI', 'TRENNO', 'TRIULZO SUPERIORE', 'XXII MARZO'
 ];
 
 export const TRENTO_CITIES = [
-  'Ala', 'Albiano', 'Aldeno', 'Amblar', 'Andalo', 'Arco', 'Avio', 'Baselga di Pinè', 'Bedollo', 
-  'Bersone', 'Besenello', 'Bezzecca', 'Bieno', 'Bleggio Inferiore', 'Bleggio Superiore', 'Bocenago', 
-  'Bolbeno', 'Bondo', 'Bondone', 'Borgo Valsugana', 'Bosentino', 'Breguzzo', 'Brentonico', 'Bresimo', 
-  'Brez', 'Brione', 'Caderzone', 'Cagnò', 'Calavino', 'Calceranica Al Lago', 'Caldes', 'Caldonazzo', 
-  'Calliano', 'Campitello Di Fassa', 'Campodenno', 'Canal San Bovo', 'Canazei', 'Capriana', 'Carano', 
-  'Carisolo', 'Carzano', 'Castel Condino', 'Castelfondo', 'Castello Tesino', 'Castello-Molina Di Fiemme', 
-  'Castelnuovo', 'Cavalese', 'Cavareno', 'Cavedago', 'Cavedine', 'Cavizzana', 'Cembra', 'Centa San Nicolò', 
-  'Cimego', 'Cimone', 'Cinte Tesino', 'Cis', 'Civezzano', 'Cles', 'Cloz', 'Commezzadura', 'Concei', 
-  'Condino', 'Coredo', 'Croviana', 'Cunevo', 'Daiano', 'Dambel', 'Daone', 'Darè', 'Denno', 'Dimaro', 
-  'Don', 'Dorsino', 'Drena', 'Dro', 'Faedo', 'Fai Della Paganella', 'Faver', 'Fiavè', 'Fiera Di Primiero', 
-  'Fierozzo', 'Flavon', 'Folgaria', 'Fondo', 'Fornace', 'Frassilongo', 'Garniga Terme', 'Giovo', 'Giustino', 
-  'Grauno', 'Grigno', 'Grumes', 'Imer', 'Isera', 'Ivano-Fracena', 'Lardaro', 'Lasino', 'Lavarone', 'Lavis', 
-  'Levico Terme', 'Lisignago', 'Livo', 'Lomaso', 'Lona-Lases', 'Luserna', 'Malosco', 'Malè', 'Massimeno', 
-  'Mazzin', 'Mezzana', 'Mezzano', 'Mezzocorona', 'Mezzolombardo', 'Moena', 'Molina Di Ledro', 'Molveno', 
-  'Monclassico', 'Montagne', 'Mori', 'Nago-Torbole', 'Nanno', 'Nave San Rocco', 'Nogaredo', 'Nomi', 
-  'Novaledo', 'Ospedaletto', 'Ossana', 'Padergnone', 'Palù del Fersina', 'Panchià', 'Peio', 'Pellizzano', 
-  'Pelugo', 'Pergine Valsugana', 'Pieve Di Bono', 'Pieve Di Ledro', 'Pieve Tesino', 'Pinzolo', 'Pomarolo', 
-  'Pozza Di Fassa', 'Praso', 'Predazzo', 'Preore', 'Prezzo', 'Rabbi', 'Ragoli', 'Revò', 'Riva Del Garda', 
-  'Romallo', 'Romeno', 'Roncegno', 'Ronchi Valsugana', 'Roncone', 'Ronzo-Chienis', 'Ronzone', 'Rovereto', 
-  'Roverè della Luna', 'Ruffrè', 'Rumo', 'Sagron Mis', 'Samone', 'San Lorenzo In Banale', 
-  'San Michele all\' Adige', 'Sant\' Orsola Terme', 'Sanzeno', 'Sarnonico', 'Scurelle', 'Segonzano', 
-  'Sfruz', 'Siror', 'Smarano', 'Soraga', 'Sover', 'Spera', 'Spiazzo', 'Spormaggiore', 'Sporminore', 
-  'Stenico', 'Storo', 'Strembo', 'Strigno', 'Taio', 'Tassullo', 'Telve', 'Telve Di Sopra', 'Tenna', 
-  'Tenno', 'Terlago', 'Terragnolo', 'Terres', 'Terzolas', 'Tesero', 'Tiarno Di Sopra', 'Tiarno Di Sotto', 
-  'Tione Di Trento', 'Ton', 'Tonadico', 'Torcegno', 'Trambileno', 'Transacqua', 'Trento', 'Tres', 'Tuenno', 
-  'Valda', 'Valfloriana', 'Vallarsa', 'Varena', 'Vattaro', 'Vermiglio', 'Vervò', 'Vezzano', 'Vignola-Falesina', 
-  'Vigo Di Fassa', 'Vigo Rendena', 'Vigolo Vattaro', 'Villa Agnedo', 'Villa Lagarina', 'Villa Rendena', 
+  'Ala', 'Albiano', 'Aldeno', 'Amblar', 'Andalo', 'Arco', 'Avio', 'Baselga di Pinè', 'Bedollo',
+  'Bersone', 'Besenello', 'Bezzecca', 'Bieno', 'Bleggio Inferiore', 'Bleggio Superiore', 'Bocenago',
+  'Bolbeno', 'Bondo', 'Bondone', 'Borgo Valsugana', 'Bosentino', 'Breguzzo', 'Brentonico', 'Bresimo',
+  'Brez', 'Brione', 'Caderzone', 'Cagnò', 'Calavino', 'Calceranica Al Lago', 'Caldes', 'Caldonazzo',
+  'Calliano', 'Campitello Di Fassa', 'Campodenno', 'Canal San Bovo', 'Canazei', 'Capriana', 'Carano',
+  'Carisolo', 'Carzano', 'Castel Condino', 'Castelfondo', 'Castello Tesino', 'Castello-Molina Di Fiemme',
+  'Castelnuovo', 'Cavalese', 'Cavareno', 'Cavedago', 'Cavedine', 'Cavizzana', 'Cembra', 'Centa San Nicolò',
+  'Cimego', 'Cimone', 'Cinte Tesino', 'Cis', 'Civezzano', 'Cles', 'Cloz', 'Commezzadura', 'Concei',
+  'Condino', 'Coredo', 'Croviana', 'Cunevo', 'Daiano', 'Dambel', 'Daone', 'Darè', 'Denno', 'Dimaro',
+  'Don', 'Dorsino', 'Drena', 'Dro', 'Faedo', 'Fai Della Paganella', 'Faver', 'Fiavè', 'Fiera Di Primiero',
+  'Fierozzo', 'Flavon', 'Folgaria', 'Fondo', 'Fornace', 'Frassilongo', 'Garniga Terme', 'Giovo', 'Giustino',
+  'Grauno', 'Grigno', 'Grumes', 'Imer', 'Isera', 'Ivano-Fracena', 'Lardaro', 'Lasino', 'Lavarone', 'Lavis',
+  'Levico Terme', 'Lisignago', 'Livo', 'Lomaso', 'Lona-Lases', 'Luserna', 'Malosco', 'Malè', 'Massimeno',
+  'Mazzin', 'Mezzana', 'Mezzano', 'Mezzocorona', 'Mezzolombardo', 'Moena', 'Molina Di Ledro', 'Molveno',
+  'Monclassico', 'Montagne', 'Mori', 'Nago-Torbole', 'Nanno', 'Nave San Rocco', 'Nogaredo', 'Nomi',
+  'Novaledo', 'Ospedaletto', 'Ossana', 'Padergnone', 'Palù del Fersina', 'Panchià', 'Peio', 'Pellizzano',
+  'Pelugo', 'Pergine Valsugana', 'Pieve Di Bono', 'Pieve Di Ledro', 'Pieve Tesino', 'Pinzolo', 'Pomarolo',
+  'Pozza Di Fassa', 'Praso', 'Predazzo', 'Preore', 'Prezzo', 'Rabbi', 'Ragoli', 'Revò', 'Riva Del Garda',
+  'Romallo', 'Romeno', 'Roncegno', 'Ronchi Valsugana', 'Roncone', 'Ronzo-Chienis', 'Ronzone', 'Rovereto',
+  'Roverè della Luna', 'Ruffrè', 'Rumo', 'Sagron Mis', 'Samone', 'San Lorenzo In Banale',
+  'San Michele all\' Adige', 'Sant\' Orsola Terme', 'Sanzeno', 'Sarnonico', 'Scurelle', 'Segonzano',
+  'Sfruz', 'Siror', 'Smarano', 'Soraga', 'Sover', 'Spera', 'Spiazzo', 'Spormaggiore', 'Sporminore',
+  'Stenico', 'Storo', 'Strembo', 'Strigno', 'Taio', 'Tassullo', 'Telve', 'Telve Di Sopra', 'Tenna',
+  'Tenno', 'Terlago', 'Terragnolo', 'Terres', 'Terzolas', 'Tesero', 'Tiarno Di Sopra', 'Tiarno Di Sotto',
+  'Tione Di Trento', 'Ton', 'Tonadico', 'Torcegno', 'Trambileno', 'Transacqua', 'Trento', 'Tres', 'Tuenno',
+  'Valda', 'Valfloriana', 'Vallarsa', 'Varena', 'Vattaro', 'Vermiglio', 'Vervò', 'Vezzano', 'Vignola-Falesina',
+  'Vigo Di Fassa', 'Vigo Rendena', 'Vigolo Vattaro', 'Villa Agnedo', 'Villa Lagarina', 'Villa Rendena',
   'Volano', 'Zambana', 'Ziano Di Fiemme', 'Zuclo'
 ];
 
@@ -186,13 +185,13 @@ interface TrainingStatus {
 // 模拟预测数据
 const generateMockPredictionData = (): PredictionData => {
   return {
-  "end": "101000",
-  "pred": [
-  ],
-  "seq": "",
-  "start": "100000",
-  "success": true
-};
+    "end": "101000",
+    "pred": [
+    ],
+    "seq": "",
+    "start": "100000",
+    "success": true
+  };
 };
 
 function App() {
@@ -207,10 +206,12 @@ function App() {
   const [currentStep, setCurrentStep] = useState<number>(0);
   const eventSourceRef = useRef<EventSource | null>(null);
   const timeoutRef = useRef<number | null>(null);
+  const [isStarted, setIsStarted] = useState(false);
+
 
   // 城市选择状态
   const [selectedCity, setSelectedCity] = useState<CityType>('milan');
-  
+
   // 获取当前城市配置
   const getCityConfig = (): CityConfig => {
     if (selectedCity === 'milan') {
@@ -239,7 +240,7 @@ function App() {
   const [clusterData, setClusterData] = useState<ClusterResponse | null>(null);
   const [cleanData, setCleanData] = useState<CleanResponse | null>(null);
   const [generationData, setGenerationData] = useState<GenerationResponse | null>(null);
-  
+
   // 分别保存深度学习和机器学习的训练状态
   const [dlTrainingStatus, setDlTrainingStatus] = useState<TrainingStatus | null>(null);
   const [dlTaskId, setDlTaskId] = useState<string | null>(null);
@@ -268,7 +269,7 @@ function App() {
 
   const handleSubmit = async (values: any) => {
     console.log('param:', values);
-    
+
     if (!uploadedFile) {
       messageApi.error('Please upload .h5ad file！');
       return;
@@ -277,20 +278,20 @@ function App() {
     setLoading(true);
     setProgress(0);
     setConnectionTimeout(false);
-    
+
     // 清除之前的超时计时器
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
-    
+
     // 设置5秒超时，如果进度仍为0则显示 Binning data
     timeoutRef.current = window.setTimeout(() => {
       if (progress === 0) {
         setConnectionTimeout(true);
       }
     }, 5000);
-    
+
     // 关闭之前的 EventSource 连接（如果存在）
     if (eventSourceRef.current) {
       eventSourceRef.current.close();
@@ -304,7 +305,7 @@ function App() {
       const currentProgress = parseFloat(event.data);
       console.log(`进度：${currentProgress}%`);
       setProgress(currentProgress);
-      
+
       // 如果收到进度更新，清除超时计时器
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -322,7 +323,7 @@ function App() {
       evtSource.close();
       eventSourceRef.current = null;
     };
-    
+
     try {
       // 准备表单数据
       const formData = new FormData();
@@ -342,7 +343,7 @@ function App() {
       }
 
       const data: PredictionData = await response.json();
-      
+
       if (data.success) {
         setPredictionData(data);
         messageApi.success('Data loaded！');
@@ -392,10 +393,10 @@ function App() {
     },
     onChange: (info) => {
       // 只保留 .h5ad 文件
-      const validFiles = info.fileList.filter(file => 
+      const validFiles = info.fileList.filter(file =>
         file.name && file.name.endsWith('.h5ad')
       );
-      
+
       if (validFiles.length === 0) {
         setUploadedFile(null);
       } else if (validFiles.length > 0) {
@@ -422,7 +423,7 @@ function App() {
             cityConfig={cityConfig}
           />
         );
-      
+
       case 1: // 数据处理
         return (
           <DataProcessingView
@@ -431,7 +432,7 @@ function App() {
             cityConfig={cityConfig}
           />
         );
-      
+
       case 2: // 数据生成
         return (
           <DataGenerationView
@@ -440,7 +441,7 @@ function App() {
             cityConfig={cityConfig}
           />
         );
-      
+
       case 3: // 模型训练
         return (
           <ModelTrainingView
@@ -467,7 +468,7 @@ function App() {
             cityConfig={cityConfig}
           />
         );
-      
+
       case 4: // 模型加载与预测
         return (
           <ModelPredictionView
@@ -480,7 +481,7 @@ function App() {
             cityConfig={cityConfig}
           />
         );
-      
+
       default:
         return null;
     }
@@ -489,77 +490,87 @@ function App() {
   return (
     <>
       {contextHolder}
-      <Layout style={{ minHeight: '100vh', maxHeight: '100vh', overflow: 'hidden' }}>
-      {/* Navigation Bar */}
-      <Header style={{ 
-        background: '#fff', 
-        display: 'flex', 
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 24px',
-        borderBottom: '1px solid #f0f0f0',
-        height: HEADER_HEIGHT,
-      }}>
-        <Space size="large" align="center">
-          <Title level={3} style={{ color: '#1890ff', margin: 0 }}>
-            Traffic Analysis
-          </Title>
-          <Radio.Group 
-            value={selectedCity} 
-            onChange={(e) => setSelectedCity(e.target.value)}
-            buttonStyle="solid"
-            size="middle"
-          >
-            <Radio.Button value="milan">米兰 Milan</Radio.Button>
-            <Radio.Button value="trento">特伦蒂诺 Trentino</Radio.Button>
-          </Radio.Group>
-        </Space>
-        <Space size="middle">
-          <Button 
-            icon={<MailOutlined />} 
-            onClick={handleContactUs}
-          >
-            Contact Us
-          </Button>
-          <Button 
-            icon={<GithubOutlined />} 
-            onClick={handleGitHub}
-          >
-            GitHub
-          </Button>
-        </Space>
-      </Header>
-      <Steps
-        current={currentStep}
-        onChange={(step) => setCurrentStep(step)}
-        style={{ padding: '10px 20px', background: '#fff', cursor: 'pointer' }}
-        items={[
-          {
-            title: '数据分析',
-            description: 'Data Analysis',
-          },
-          {
-            title: '数据处理',
-            description: 'Data Processing',
-          },
-          {
-            title: '数据生成',
-            description: 'Data Generation',
-          },
-          {
-            title: '模型训练',
-            description: 'Model Training',
-          },
-          {
-            title: '模型加载与预测',
-            description: 'Model Loading & Prediction',
-          },
-        ]}
-      />
-      <Layout style={{ height: `calc(100vh - ${HEADER_HEIGHT}px - 46px - 100px)`, overflow: 'hidden' }}>
-        {renderStepContent()}
-      </Layout>
-    </Layout>
+      <Layout style={{ minHeight: '100vh', maxHeight: '100vh', minWidth: '900px', overflow: 'hidden' }}>
+        {/* Navigation Bar */}
+        <Header style={{
+          background: '#fff',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 24px',
+          borderBottom: '1px solid #f0f0f0',
+          height: '65px',
+          minWidth: '900px',
+          zIndex:'10'
+        }}>
+          <Space size="large" align="center">
+            <Title level={3} style={{ color: '#1890ff', margin: 0 }} onClick={() => { setIsStarted(false); setCurrentStep(0); }} >
+              Traffic Analysis
+            </Title>
+            <Radio.Group
+              value={selectedCity}
+              onChange={(e) => setSelectedCity(e.target.value)}
+              buttonStyle="solid"
+              size="middle"
+            >
+              <Radio.Button value="milan">米兰 Milan</Radio.Button>
+              <Radio.Button value="trento">特伦蒂诺 Trentino</Radio.Button>
+            </Radio.Group>
+          </Space>
+          <Space size="middle">
+            <Button
+              icon={<MailOutlined />}
+              onClick={handleContactUs}
+            >
+              Contact Us
+            </Button>
+            <Button
+              icon={<GithubOutlined />}
+              onClick={handleGitHub}
+            >
+              GitHub
+            </Button>
+          </Space>
+        </Header>
+
+        {!isStarted ? (
+             <StartView onStart={() => setIsStarted(true)} /> 
+        ) : (
+          <>
+            <Steps
+              current={currentStep}
+              onChange={(step) => setCurrentStep(step)}
+              style={{ padding: '10px 20px', background: '#fff', cursor: 'pointer' }}
+              items={[
+                {
+                  title: '数据分析',
+                  description: 'Data Analysis',
+                },
+                {
+                  title: '数据处理',
+                  description: 'Data Processing',
+                },
+                {
+                  title: '数据生成',
+                  description: 'Data Generation',
+                },
+                {
+                  title: '模型训练',
+                  description: 'Model Training',
+                },
+                {
+                  title: '模型加载与预测',
+                  description: 'Model Loading & Prediction',
+                },
+              ]}
+            />
+            <Layout style={{ height: `calc(100vh - 65px)`, overflow: 'hidden' }}>
+              {renderStepContent()}
+            </Layout>
+          </>
+        )}
+      </Layout >
+
     </>
   );
 }

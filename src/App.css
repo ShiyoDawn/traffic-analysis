@@ -57,3 +57,13 @@ body, html {
 .train-button:active {
   transform: translateY(0);
 }
+
+  .start-view-container {
+    transition: transform 100ms ease-in-out;
+  }
+  
+  .start-view-exit {
+    transform: translateY(-100%);
+
+  }
+  

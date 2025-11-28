@@ -13,6 +13,7 @@ import {
   Switch,
   DatePicker,
 } from 'antd';
+import { DownloadOutlined} from '@ant-design/icons';
 import type { CityConfig } from '../App';
 
 const { Sider, Content } = Layout;
@@ -97,7 +98,7 @@ const DataGenerationView: React.FC<DataGenerationViewProps> = ({
       }
 
       const data: GenerationResponse = await response.json();
-      
+
       if (data.status === 'success') {
         setGenerationData(data);
         messageApi.success('样本生成完成！');
@@ -116,10 +117,10 @@ const DataGenerationView: React.FC<DataGenerationViewProps> = ({
     <>
       {contextHolder}
       <Layout style={{ height: '100%', overflow: 'hidden' }}>
-        <Sider 
-          width="25%" 
-          style={{ 
-            background: '#fff', 
+        <Sider
+          width="25%"
+          style={{
+            background: '#fff',
             padding: '20px',
             overflow: 'auto',
             height: '80%',
@@ -174,6 +175,7 @@ const DataGenerationView: React.FC<DataGenerationViewProps> = ({
                     min={10}
                     max={1000}
                     style={{ width: '100%' }}
+                    placeholder="请输入10-1000之间的数字"
                   />
                 </Form.Item>
 
@@ -186,6 +188,7 @@ const DataGenerationView: React.FC<DataGenerationViewProps> = ({
                     min={1}
                     max={100}
                     style={{ width: '100%' }}
+                    placeholder="请输入1-100之间的数字"
                   />
                 </Form.Item>
 
@@ -251,6 +254,7 @@ const DataGenerationView: React.FC<DataGenerationViewProps> = ({
                     min={1}
                     max={100}
                     style={{ width: '100%' }}
+                    placeholder="请输入1-100之间的数字"
                   />
                 </Form.Item>
 
@@ -264,6 +268,7 @@ const DataGenerationView: React.FC<DataGenerationViewProps> = ({
                     max={0.9}
                     step={0.1}
                     style={{ width: '100%' }}
+                    placeholder="请输入0.1-0.9之间的数字"
                   />
                 </Form.Item>
 
@@ -276,6 +281,7 @@ const DataGenerationView: React.FC<DataGenerationViewProps> = ({
                     min={1}
                     max={20}
                     style={{ width: '100%' }}
+                    placeholder="请输入1-20之间的数字"
                   />
                 </Form.Item>
 
@@ -296,6 +302,7 @@ const DataGenerationView: React.FC<DataGenerationViewProps> = ({
                   <InputNumber
                     min={0}
                     style={{ width: '100%' }}
+                    placeholder="请输入大于0的数字"
                   />
                 </Form.Item>
 
@@ -367,6 +374,7 @@ const DataGenerationView: React.FC<DataGenerationViewProps> = ({
             </Card>
           ) : (
             <div style={{ textAlign: 'center', padding: '50px', color: '#999' }}>
+              <DownloadOutlined style={{ fontSize: '48px', marginBottom: '16px' }} />
               <Typography.Title level={4} style={{ color: '#999' }}>
                 请配置参数并开始生成样本
               </Typography.Title>

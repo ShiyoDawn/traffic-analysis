@@ -91,18 +91,18 @@ interface ClusterResponse {
 
 // 城市名称映射表（从ID 1开始）
 const CITY_NAMES = [
-  'ADRIANO', 'AFFORI', 'ASSIANO', 'BAGGIO', 'BANDE NERE', 'BARONA', 'BICOCCA', 'BOLDINASCO', 
-  'BOSCOINCITTA', 'BOVISA', 'BOVISASCA', 'BRERA', 'BRUZZANO', 'BUENOS AIRES', 'CALVAIRATE', 
-  'CANTALUPA', 'CASCINA MERLATA', 'CHIARAVALLE', 'CIMIANO', 'CITTA STUDI', 'COMASINA', 
-  'CONCA DEL NAVIGLIO', 'CONCA FALLATA', 'CONCHETTA', 'CORSICA', 'DE ANGELI', 'DEI NAVIGLI', 
-  'DELLE ABBAZIE', 'DERGANO', 'DUOMO', 'FARINI', 'FATIMA', 'FIGINO', 'FORLANINI', 'FORZE ARMATE', 
-  'GHISOLFA', 'GIAMBELLINO', 'GIARDINI', 'GORLA', 'GRATOSOGLIO', 'GRECO', 'GUASTALLA', 
-  'IPPODROMI', 'ISOLA', 'LAMBRATE', 'LAMPUGNANO', 'LODI', 'LODOVICO IL MORO', 'LORENTEGGIO', 
-  'LORETO', 'MACIACHINI', 'MAGENTA', 'MAGGIORE', 'MONCUCCO', 'MONLUE', 'MORIVIONE', 'MUGGIANO', 
-  'MUSOCCO', 'NIGUARDA', 'ORTOMERCATO', 'PADOVA', 'PAGANO', 'PARCO FORLANINI', 'PARCO NORD', 
-  'PARCO SEMPIONE', 'PONTE SEVESO', 'PORTA GARIBALDI', 'PORTA GENOVA', 'PORTA LODOVICA', 
-  'PORTA MAGENTA', 'PORTELLO', 'PTA ROMANA', 'QT 8', 'QUARTO CAGNINO', 'QUINTO ROMANO', 
-  'QUINTOSOLE', 'RONCHETTO DELLE RANE', 'ROSERIO', 'SAN SIRO', 'SANTA GIULIA', 'SARPI', 
+  'ADRIANO', 'AFFORI', 'ASSIANO', 'BAGGIO', 'BANDE NERE', 'BARONA', 'BICOCCA', 'BOLDINASCO',
+  'BOSCOINCITTA', 'BOVISA', 'BOVISASCA', 'BRERA', 'BRUZZANO', 'BUENOS AIRES', 'CALVAIRATE',
+  'CANTALUPA', 'CASCINA MERLATA', 'CHIARAVALLE', 'CIMIANO', 'CITTA STUDI', 'COMASINA',
+  'CONCA DEL NAVIGLIO', 'CONCA FALLATA', 'CONCHETTA', 'CORSICA', 'DE ANGELI', 'DEI NAVIGLI',
+  'DELLE ABBAZIE', 'DERGANO', 'DUOMO', 'FARINI', 'FATIMA', 'FIGINO', 'FORLANINI', 'FORZE ARMATE',
+  'GHISOLFA', 'GIAMBELLINO', 'GIARDINI', 'GORLA', 'GRATOSOGLIO', 'GRECO', 'GUASTALLA',
+  'IPPODROMI', 'ISOLA', 'LAMBRATE', 'LAMPUGNANO', 'LODI', 'LODOVICO IL MORO', 'LORENTEGGIO',
+  'LORETO', 'MACIACHINI', 'MAGENTA', 'MAGGIORE', 'MONCUCCO', 'MONLUE', 'MORIVIONE', 'MUGGIANO',
+  'MUSOCCO', 'NIGUARDA', 'ORTOMERCATO', 'PADOVA', 'PAGANO', 'PARCO FORLANINI', 'PARCO NORD',
+  'PARCO SEMPIONE', 'PONTE SEVESO', 'PORTA GARIBALDI', 'PORTA GENOVA', 'PORTA LODOVICA',
+  'PORTA MAGENTA', 'PORTELLO', 'PTA ROMANA', 'QT 8', 'QUARTO CAGNINO', 'QUINTO ROMANO',
+  'QUINTOSOLE', 'RONCHETTO DELLE RANE', 'ROSERIO', 'SAN SIRO', 'SANTA GIULIA', 'SARPI',
   'SCALO ROMANA', 'STEPHENSON', 'TIBALDI', 'TRE TORRI', 'TRENNO', 'TRIULZO SUPERIORE', 'XXII MARZO'
 ];
 
@@ -177,7 +177,7 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
       }
 
       const data: AnalysisResponse = await response.json();
-      
+
       if (data.status === 'success') {
         setAnalysisData(data);
         messageApi.success('数据分析完成！');
@@ -230,7 +230,7 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
       }
 
       const data: ClusterResponse = await response.json();
-      
+
       if (data.status === 'success') {
         setClusterData(data);
         messageApi.success('聚类分析完成！');
@@ -253,7 +253,7 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
 
     cities.forEach((city) => {
       const cityData = analysisData.data.points[city];
-      
+
       // 主数据线
       series.push({
         name: city,
@@ -327,7 +327,7 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
         },
         formatter: (params: any) => {
           if (!params || params.length === 0) return '';
-          
+
           let result = `<div style="font-weight: bold; margin-bottom: 5px;">${params[0].axisValue}</div>`;
           params.forEach((param: any) => {
             if (param.value !== null && param.value !== undefined) {
@@ -448,7 +448,7 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
 
   const getHeatmapOption = () => {
     if (!clusterData) return {};
-    
+
     const { heatmap } = clusterData.data.result;
     return {
       title: {
@@ -504,7 +504,7 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
         {
           name: '相关性',
           type: 'heatmap',
-          data: heatmap.matrix.flatMap((row, i) => 
+          data: heatmap.matrix.flatMap((row, i) =>
             row.map((value, j) => [i, j, value])
           ),
           label: {
@@ -524,10 +524,10 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
 
   const getMeanCurveOption = () => {
     if (!clusterData) return {};
-    
+
     const { mean_curve } = clusterData.data.result;
     const clusters = [...new Set(mean_curve.map(item => item.cluster))];
-    
+
     const series = clusters.map(clusterId => {
       const clusterData = mean_curve.filter(item => item.cluster === clusterId);
       return {
@@ -585,10 +585,10 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
 
   const getPCAOption = () => {
     if (!clusterData) return {};
-    
+
     const { pca_2d } = clusterData.data.result;
     const clusters = [...new Set(pca_2d.map(item => item.cluster))];
-    
+
     const series = clusters.map(clusterId => {
       const clusterPoints = pca_2d.filter(item => item.cluster === clusterId);
       return {
@@ -669,7 +669,6 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
                   layout="vertical"
                   onFinish={handleAnalysis}
                   initialValues={{
-                    method: 'iqr',
                     z_thresh: 3.0,
                     window_size: 10,
                   }}
@@ -699,8 +698,8 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
                         (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                       }
                       options={cityConfig.cities.map((name, index) => ({
-                        label: `${index+1} - ${name}`,
-                        value: index+1,
+                        label: `${index + 1} - ${name}`,
+                        value: index + 1,
                       }))}
                     />
                   </Form.Item>
@@ -708,8 +707,9 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
                   <Form.Item
                     label="分析方法"
                     name="method"
+                    rules={[{ required: true, message: '请选择分析方法' }]}
                   >
-                    <Select>
+                    <Select placeholder="请选择分析方法" allowClear>
                       <Option value="iqr">IQR (四分位距)</Option>
                       <Option value="zscore">Z-Score (Z分数)</Option>
                       <Option value="window">Window (滑动窗口)</Option>
@@ -783,10 +783,10 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
                     <div key={city} style={{ marginBottom: '16px' }}>
                       <Typography.Title level={5}>{city}</Typography.Title>
                       <Typography.Text>
-                        总数据点: {stats.total} | 
-                        平均值: {stats.mean.toFixed(2)} | 
-                        标准差: {stats.std.toFixed(2)} | 
-                        缺失值: {stats.missing} | 
+                        总数据点: {stats.total} |
+                        平均值: {stats.mean.toFixed(2)} |
+                        标准差: {stats.std.toFixed(2)} |
+                        缺失值: {stats.missing} |
                         异常值: {stats.outlier}
                       </Typography.Text>
                     </div>
@@ -796,7 +796,7 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
             </Spin>
           </>
         );
-      
+
       case 'cluster':
         return (
           <>
@@ -835,8 +835,8 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
                         (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                       }
                       options={cityConfig.cities.map((name, index) => ({
-                        label: `${index+1} - ${name}`,
-                        value: index+1,
+                        label: `${index + 1} - ${name}`,
+                        value: index + 1,
                       }))}
                     />
                   </Form.Item>
@@ -845,7 +845,7 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
                     label="聚类方法"
                     name="method"
                   >
-                    <Select>
+                    <Select placeholder="请选择分析方法" allowClear>
                       <Option value="kmeans">K-Means</Option>
                       <Option value="hierarchical">层次聚类</Option>
                       <Option value="gmm">高斯混合模型</Option>
@@ -860,6 +860,7 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
                       min={2}
                       max={10}
                       style={{ width: '100%' }}
+                      placeholder="请填写聚类簇数"
                     />
                   </Form.Item>
 
@@ -909,7 +910,7 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
     // 为每个时间点准备城市数据
     const timelineData = timeSeriesData.map((timestamp, timeIndex) => {
       const cityDataMap: Record<string, number> = {};
-      
+
       cities.forEach((cityName) => {
         const cityPoints = analysisData.data.points[cityName];
         // 获取该时间点的流量值
@@ -952,10 +953,10 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
           ]}
         />
         <Layout style={{ height: 'calc(100% - 46px)', overflow: 'hidden' }}>
-          <Sider 
-            width="25%" 
-            style={{ 
-              background: '#fff', 
+          <Sider
+            width="25%"
+            style={{
+              background: '#fff',
               padding: '20px',
               overflow: 'auto',
               height: '75%',
@@ -973,7 +974,7 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
               analysisData ? (
                 <>
                   {/* 悬浮的切换按钮 */}
-                  <div style={{ 
+                  <div style={{
                     position: 'absolute',
                     top: '24px',
                     right: '24px',
@@ -984,8 +985,8 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
                     padding: '4px',
                     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
                   }}>
-                    <Radio.Group 
-                      value={viewMode} 
+                    <Radio.Group
+                      value={viewMode}
                       onChange={(e) => setViewMode(e.target.value)}
                       buttonStyle="solid"
                       size="large"
@@ -998,7 +999,7 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
                       </Radio.Button>
                     </Radio.Group>
                   </div>
-                  
+
                   {/* 内容区域 */}
                   {viewMode === 'chart' ? (
                     <ReactECharts
@@ -1020,10 +1021,10 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
                         />
                       </div>
                     ) : (
-                      <div style={{ 
-                        display: 'flex', 
-                        justifyContent: 'center', 
-                        alignItems: 'center', 
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                         height: '100%',
                         color: '#999',
                       }}>
@@ -1100,7 +1101,7 @@ const DataAnalysisView: React.FC<DataAnalysisViewProps> = ({
               )
             ) : null}
           </Content>
-          </Layout>
+        </Layout>
       </Layout>
     </>
   );

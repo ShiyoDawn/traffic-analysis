@@ -226,9 +226,8 @@ const ModelPredictionView: React.FC<ModelPredictionViewProps> = ({
         name="model_class"
         label="模型类型"
         rules={[{ required: true, message: '请选择模型类型' }]}
-        initialValue="cnn1d"
       >
-        <Select>
+        <Select placeholder="请选择模型">
           <Option value="mlp">MLP</Option>
           <Option value="lstm">LSTM</Option>
           <Option value="gru">GRU</Option>
@@ -263,7 +262,8 @@ const ModelPredictionView: React.FC<ModelPredictionViewProps> = ({
         label="批大小"
         initialValue={64}
       >
-        <InputNumber min={1} max={512} style={{ width: '100%' }} />
+        <InputNumber min={1} max={512} style={{ width: '100%' }} 
+                    placeholder="请输入1-512之间的数字"/>
       </Form.Item>
 
       <Form.Item
@@ -315,7 +315,8 @@ const ModelPredictionView: React.FC<ModelPredictionViewProps> = ({
         label="批大小"
         initialValue={512}
       >
-        <InputNumber min={1} max={2048} style={{ width: '100%' }} />
+        <InputNumber min={1} max={2048} style={{ width: '100%' }} 
+                    placeholder="请输入1-2048之间的数字"/>
       </Form.Item>
 
       <Form.Item
@@ -323,7 +324,8 @@ const ModelPredictionView: React.FC<ModelPredictionViewProps> = ({
         label="最大显示点数"
         initialValue={5000}
       >
-        <InputNumber min={100} max={50000} style={{ width: '100%' }} />
+        <InputNumber min={100} max={50000} style={{ width: '100%' }} 
+                    placeholder="请输入100-50000之间的数字"/>
       </Form.Item>
 
       <Form.Item
@@ -331,7 +333,8 @@ const ModelPredictionView: React.FC<ModelPredictionViewProps> = ({
         label="误差分布分箱数"
         initialValue={40}
       >
-        <InputNumber min={10} max={200} style={{ width: '100%' }} />
+        <InputNumber min={10} max={200} style={{ width: '100%' }} 
+                    placeholder="请输入50-200之间的数字"/>
       </Form.Item>
 
       <Form.Item
@@ -360,9 +363,8 @@ const ModelPredictionView: React.FC<ModelPredictionViewProps> = ({
         name="model_name"
         label="模型类型"
         rules={[{ required: true, message: '请选择模型类型' }]}
-        initialValue="persistence"
       >
-        <Select>
+        <Select placeholder="请选择模型" allowClear>
           <Option value="persistence">Persistence (持续性)</Option>
           <Option value="moving_avg">Moving Average (移动平均)</Option>
           <Option value="exp_smooth">Exponential Smoothing (指数平滑)</Option>
@@ -396,7 +398,8 @@ const ModelPredictionView: React.FC<ModelPredictionViewProps> = ({
         label="批大小"
         initialValue={64}
       >
-        <InputNumber min={1} max={1024} style={{ width: '100%' }} />
+        <InputNumber min={1} max={1024} style={{ width: '100%' }} 
+                    placeholder="请输入1-1024之间的数字"/>
       </Form.Item>
 
       <Form.Item
@@ -404,7 +407,8 @@ const ModelPredictionView: React.FC<ModelPredictionViewProps> = ({
         label="最大显示点数"
         initialValue={8000}
       >
-        <InputNumber min={100} max={50000} style={{ width: '100%' }} />
+        <InputNumber min={100} max={50000} style={{ width: '100%' }} 
+                    placeholder="请输入100-50000之间的数字"/>
       </Form.Item>
 
       <Form.Item
@@ -412,7 +416,8 @@ const ModelPredictionView: React.FC<ModelPredictionViewProps> = ({
         label="误差分布分箱数"
         initialValue={50}
       >
-        <InputNumber min={10} max={200} style={{ width: '100%' }} />
+        <InputNumber min={10} max={200} style={{ width: '100%' }} 
+                    placeholder="请输入10-200之间的数字"/>
       </Form.Item>
 
       <Form.Item>
