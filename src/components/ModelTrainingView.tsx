@@ -570,9 +570,12 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
             >
               <Form.Item label="模型名称" name="model_name" rules={[{ required: true }]}>
                 <Select placeholder="请选择模型" allowClear>
+                   <Select.Option value="mlp">MLP</Select.Option>
                   <Select.Option value="cnn1d">CNN1D</Select.Option>
+                  <Select.Option value="rnn">RNN</Select.Option>
                   <Select.Option value="lstm">LSTM</Select.Option>
                   <Select.Option value="gru">GRU</Select.Option>
+                  <Select.Option value="tcn">TCN</Select.Option>
                   <Select.Option value="transformer">Transformer</Select.Option>
                 </Select>
               </Form.Item>
@@ -588,6 +591,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               <Form.Item label="优化器" name="optimizer_name" rules={[{ required: true }]}>
                 <Select placeholder="请选择优化器" allowClear>
                   <Select.Option value="adam">Adam</Select.Option>
+                  <Select.Option value="adamw">AdamW</Select.Option>
                   <Select.Option value="sgd">SGD</Select.Option>
                   <Select.Option value="rmsprop">RMSprop</Select.Option>
                 </Select>
@@ -598,6 +602,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
                   <Select.Option value="mse">MSE</Select.Option>
                   <Select.Option value="mae">MAE</Select.Option>
                   <Select.Option value="huber">Huber</Select.Option>
+                  <Select.Option value="smoothl1">Smoothl1</Select.Option>
+                  <Select.Option value="smape">SMAPE</Select.Option>
                 </Select>
               </Form.Item>
 
@@ -672,12 +678,18 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
             >
               <Form.Item label="模型名称" name="model_name" rules={[{ required: true }]}>
                 <Select placeholder="请选择模型" allowClear>
+                  <Select.Option value="linear">Linear</Select.Option>
                   <Select.Option value="ridge">Ridge</Select.Option>
                   <Select.Option value="lasso">Lasso</Select.Option>
-                  <Select.Option value="random_forest">Random Forest</Select.Option>
-                  <Select.Option value="gbdt">GBDT</Select.Option>
-                  <Select.Option value="xgboost">XGBoost</Select.Option>
+                  <Select.Option value="elasticnet">Elasticnet</Select.Option>
+                  <Select.Option value="rf">Random Forest</Select.Option>
+                  <Select.Option value="extratrees">Extratrees</Select.Option>
+                  <Select.Option value="gboost">GBOOST</Select.Option>
                   <Select.Option value="lightgbm">LightGBM</Select.Option>
+                  <Select.Option value="xgboost">Xgboost</Select.Option>
+                  <Select.Option value="catboost">Catboost</Select.Option>
+                  <Select.Option value="svr">SVR</Select.Option>
+                  <Select.Option value="mlp">MLP</Select.Option>
                 </Select>
               </Form.Item>
 
