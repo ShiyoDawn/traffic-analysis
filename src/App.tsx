@@ -163,7 +163,7 @@ interface TrainingStatus {
     model_path: string;
     metrics: {
       mae: number;
-      mse: number;
+      rmse: number;
       r2: number;
       smape: number;
     };
