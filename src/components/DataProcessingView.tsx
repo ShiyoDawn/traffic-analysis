@@ -160,7 +160,7 @@ const DataProcessingView: React.FC<DataProcessingViewProps> = ({
                 <Form.Item noStyle shouldUpdate={(prevValues, currentValues) => prevValues.outlier_method !== currentValues.outlier_method}>
                   {({ getFieldValue }) => {
                     const method = getFieldValue('outlier_method');
-                    if (method === 'zscore' || method === 'window') {
+                    if (method === 'zscore') {
                       return (
                         <Form.Item
                           label="Z分数阈值"

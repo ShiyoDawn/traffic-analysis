@@ -10,8 +10,7 @@ interface TrainingResult {
   model_path: string;
   metrics: {
     mae: number;
-    mse: number;
-    rmse?: number;
+    rmse: number;
     r2: number;
     smape: number;
   };
@@ -556,8 +555,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               form={form}
               layout="vertical"
               initialValues={{
-                train_csv: '../data/output/train_samples_seq200_out5_overlap1_testevery5.csv',
-                test_csv: '../data/output/test_samples_seq200_out5_overlap1_testevery5.csv',
+                train_csv: '../data/samples/train_samples_seq10_out1_overlap1_ratio7.csv',
+                test_csv: '../data/samples/test_samples_seq10_out1_overlap1_ratio7.csv',
                 lr: 0.001,
                 batch_size: 32,
                 epochs: 3,
@@ -666,8 +665,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               layout="vertical"
               initialValues={{
                 model_name: 'ridge',
-                train_csv: '../data/output/train_samples_seq200_out5_overlap1_testevery5.csv',
-                test_csv: '../data/output/test_samples_seq200_out5_overlap1_testevery5.csv',
+                train_csv: '../data/samples/train_samples_seq10_out1_overlap1_ratio7.csv',
+                test_csv: '../data/samples/test_samples_seq10_out1_overlap1_ratio7.csv',
                 batch_size: 64,
                 verbose: true,
                 plot_figures: false,
@@ -729,10 +728,6 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
                     placeholder="请输入10-200之间的数字"/>
               </Form.Item>
 
-              <Form.Item label="预测结果保存路径" name="save_preds_path">
-                <Input placeholder="预测结果CSV文件保存路径" />
-              </Form.Item>
-
               <Form.Item>
                 <Button type="primary" onClick={handleTrainML} loading={loading} block>
                   开始训练
@@ -749,8 +744,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               layout="vertical"
               initialValues={{
                 model_name: 'persistence',
-                train_csv: '../data/output/train_samples_seq200_out5_overlap1_testevery5.csv',
-                test_csv: '../data/output/test_samples_seq200_out5_overlap1_testevery5.csv',
+                train_csv: '../data/samples/train_samples_seq10_out1_overlap1_ratio7.csv',
+                test_csv: '../data/samples/test_samples_seq10_out1_overlap1_ratio7.csv',
                 batch_size: 64,
                 verbose: true,
                 max_display_points: 8000,
@@ -791,10 +786,6 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
                 </Select>
               </Form.Item>
 
-              <Form.Item label="最大显示点数" name="max_display_points">
-                <InputNumber min={1000} max={50000} style={{ width: '100%' }} placeholder="请输入1000-50000之间的数字"/>
-              </Form.Item>
-
               <Form.Item label="保存图表" name="plot_figures" valuePropName="checked">
                 <Select placeholder="请选择是否保存图表（默认不保存图表）" allowClear>
                   <Select.Option value={true}>是</Select.Option>
@@ -826,8 +817,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               form={form}
               layout="vertical"
               initialValues={{
-                train_csv: 'D:/article/software_engineering/data/train.csv',
-                test_csv: 'D:/article/software_engineering/data/test.csv',
+                train_csv: '../data/samples/train_samples_seq10_out1_overlap1_ratio7.csv',
+                test_csv: '../data/samples/test_samples_seq10_out1_overlap1_ratio7.csv',
                 bert_path: 'D:/article/software_engineering/bert',
                 epochs: 3,
                 batch_size: 8,
@@ -864,10 +855,6 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
                     placeholder="请输入0.00001-0.01之间的数字"/>
               </Form.Item>
 
-              <Form.Item label="样本数量" name="sample_size" rules={[{ required: true }]}>
-                <InputNumber min={100} max={50000} style={{ width: '100%' }} placeholder="请输入100-50000之间的数字"/>
-              </Form.Item>
-
               <Form.Item label="保存图表" name="plot_figures" valuePropName="checked">
                 <Select placeholder="请选择是否保存图表（默认不保存图表）" allowClear>
                   <Select.Option value={true}>是</Select.Option>
@@ -880,22 +867,12 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
                     placeholder="请输入10-200之间的数字"/>
               </Form.Item>
 
-              <Form.Item label="最大显示点数" name="max_points">
-                <InputNumber min={1000} max={50000} style={{ width: '100%' }} placeholder="请输入1000-50000之间的数字"/>
-              </Form.Item>
-
               <Form.Item>
                 <Button type="primary" onClick={handleTrainBert} loading={loading} block>
                   开始训练
                 </Button>
               </Form.Item>
             </Form>
-          </Card>
-        );
-      case 'model_comparison':
-        return (
-          <Card title="模型对比配置">
-            <Typography.Text type="secondary">功能开发中...</Typography.Text>
           </Card>
         );
       
@@ -1250,7 +1227,6 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
                   <div style={{ marginBottom: 16 }}>
                     <div>任务ID: {dlTaskId}</div>
                     <div>状态: {dlTrainingStatus.message}</div>
-                    <div>当前轮次: {dlTrainingStatus.epoch}</div>
                   </div>
                   <Progress percent={dlTrainingStatus.progress} status={dlTrainingStatus.status === 'running' ? 'active' : 'success'} />
                 </Spin>
@@ -1262,7 +1238,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
                 <Card title="训练指标" style={{ marginBottom: 20 }}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                     <div><strong>MAE:</strong> {dlTrainingStatus.result.metrics.mae.toFixed(4)}</div>
-                    <div><strong>MSE:</strong> {dlTrainingStatus.result.metrics.mse.toFixed(4)}</div>
+                    <div><strong>RMSE:</strong> {dlTrainingStatus.result.metrics.rmse.toFixed(4)}</div>
                     <div><strong>R²:</strong> {dlTrainingStatus.result.metrics.r2.toFixed(6)}</div>
                     <div><strong>SMAPE:</strong> {dlTrainingStatus.result.metrics.smape.toFixed(6)}</div>
                   </div>
@@ -1335,7 +1311,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
                 <Card title="训练指标" style={{ marginBottom: 20 }}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                     <div><strong>MAE:</strong> {mlTrainingStatus.result.metrics.mae.toFixed(4)}</div>
-                    <div><strong>MSE:</strong> {mlTrainingStatus.result.metrics.mse ? mlTrainingStatus.result.metrics.mse.toFixed(4) : 'N/A'}</div>
+                    <div><strong>RMSE:</strong> {mlTrainingStatus.result.metrics.rmse ? mlTrainingStatus.result.metrics.rmse.toFixed(4) : 'N/A'}</div>
                     <div><strong>R²:</strong> {mlTrainingStatus.result.metrics.r2.toFixed(6)}</div>
                     <div><strong>SMAPE:</strong> {mlTrainingStatus.result.metrics.smape.toFixed(6)}</div>
                   </div>
@@ -1408,7 +1384,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
                 <Card title="训练指标" style={{ marginBottom: 20 }}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                     <div><strong>MAE:</strong> {mathTrainingStatus.result.metrics.mae.toFixed(4)}</div>
-                    <div><strong>MSE:</strong> {mathTrainingStatus.result.metrics.mse ? mathTrainingStatus.result.metrics.mse.toFixed(4) : 'N/A'}</div>
+                    <div><strong>RMSE:</strong> {mathTrainingStatus.result.metrics.rmse ? mathTrainingStatus.result.metrics.rmse.toFixed(4) : 'N/A'}</div>
                     <div><strong>R²:</strong> {mathTrainingStatus.result.metrics.r2.toFixed(6)}</div>
                     <div><strong>SMAPE:</strong> {mathTrainingStatus.result.metrics.smape.toFixed(6)}</div>
                   </div>
@@ -1494,7 +1470,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
                 <Card title="训练指标" style={{ marginBottom: 20 }}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                     <div><strong>MAE:</strong> {bertTrainingStatus.result.metrics.mae.toFixed(4)}</div>
-                    <div><strong>MSE:</strong> {bertTrainingStatus.result.metrics.mse ? bertTrainingStatus.result.metrics.mse.toFixed(4) : 'N/A'}</div>
+                    <div><strong>RMSE:</strong> {bertTrainingStatus.result.metrics.rmse ? bertTrainingStatus.result.metrics.rmse.toFixed(4) : 'N/A'}</div>
                     <div><strong>R²:</strong> {bertTrainingStatus.result.metrics.r2.toFixed(6)}</div>
                     <div><strong>SMAPE:</strong> {bertTrainingStatus.result.metrics.smape.toFixed(6)}</div>
                   </div>
@@ -1674,16 +1650,6 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
           </>
         );
       
-      case 'model_comparison':
-        return (
-          <div style={{ textAlign: 'center', padding: '50px', color: '#999' }}>
-            <ExperimentOutlined style={{ fontSize: '48px', marginBottom: '16px' }} />
-            <Typography.Title level={4} style={{ color: '#999' }}>
-              数学模型训练
-            </Typography.Title>
-            <Typography.Text>功能开发中...</Typography.Text>
-          </div>
-        );
       default:
         return null;
     }
@@ -1704,7 +1670,6 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
             { key: 'math_training', label: '数学模型训练', icon: <FunctionOutlined /> },
             { key: 'bert_training', label: 'BERT大模型训练', icon: <BulbOutlined /> },
             { key: 'feature_engineering', label: '特征工程', icon: <ToolOutlined /> },
-            { key: 'model_comparison', label: '模型对比', icon: <ExperimentOutlined /> },
           ]}
         />
         <Layout style={{ height: 'calc(100% - 46px)', overflow: 'hidden' }}>

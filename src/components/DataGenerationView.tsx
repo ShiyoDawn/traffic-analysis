@@ -271,20 +271,7 @@ const DataGenerationView: React.FC<DataGenerationViewProps> = ({
                     placeholder="请输入0.1-0.9之间的数字"
                   />
                 </Form.Item>
-
-                <Form.Item
-                  label="测试集采样间隔"
-                  name="test_every"
-                  tooltip="每多少个样本选一次作为测试集（保持时间序）"
-                >
-                  <InputNumber
-                    min={1}
-                    max={20}
-                    style={{ width: '100%' }}
-                    placeholder="请输入1-20之间的数字"
-                  />
-                </Form.Item>
-
+                
                 <Form.Item
                   label="随机打乱"
                   name="shuffle"
