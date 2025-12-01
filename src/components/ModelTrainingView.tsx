@@ -309,12 +309,12 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
         let modifiedPath = path;
         
         // 再在 _train.csv 前加上 _code11111111111
-        if (modifiedPath.includes('.csv')) {
+        if (modifiedPath.includes('train')) {
           modifiedPath = modifiedPath.replace('.csv', '_code11111111111_train.csv');
         }
         // 在 _test.csv 前加上 _code11111111111
-        if (modifiedPath.includes('_test.csv')) {
-          modifiedPath = modifiedPath.replace('_test.csv', '_code11111111111_test.csv');
+        if (modifiedPath.includes('test')) {
+          modifiedPath = modifiedPath.replace('.csv', '_code11111111111_test.csv');
         }
         
         return modifiedPath;
