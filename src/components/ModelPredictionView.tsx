@@ -234,7 +234,6 @@ const ModelPredictionView: React.FC<ModelPredictionViewProps> = ({
           <Option value="cnn1d">CNN1D</Option>
           <Option value="cnn_lstm">CNN-LSTM</Option>
           <Option value="attention_lstm">Attention-LSTM</Option>
-          <Option value="transformer">Transformer</Option>
           <Option value="tcn">TCN</Option>
         </Select>
       </Form.Item>

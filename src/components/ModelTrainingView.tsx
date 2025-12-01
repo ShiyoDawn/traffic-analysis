@@ -1,5 +1,5 @@
 import { Layout, Typography, Menu, Form, Select, Input, InputNumber, Button, Card, Spin, message, Progress, Tabs, Checkbox } from 'antd';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { RocketOutlined, ThunderboltOutlined, ExperimentOutlined, FunctionOutlined, BulbOutlined, ToolOutlined } from '@ant-design/icons';
 import ReactECharts from 'echarts-for-react';
 import type { CityConfig } from '../App';
@@ -85,15 +85,66 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
   cityConfig,
 }) => {
   const [currentMenu, setCurrentMenu] = useState('dl_training');
-  const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+  
+  // 为每个模型创建独立的表单实例
+  const [dlForm] = Form.useForm();
+  const [mlForm] = Form.useForm();
+  const [mathForm] = Form.useForm();
+  const [bertForm] = Form.useForm();
+  const [feForm] = Form.useForm();
+  
+  // 为每个模型创建独立的 loading 状态
+  const [dlLoading, setDlLoading] = useState(false);
+  const [mlLoading, setMlLoading] = useState(false);
+  const [mathLoading, setMathLoading] = useState(false);
+  const [bertLoading, setBertLoading] = useState(false);
+  const [feLoading, setFeLoading] = useState(false);
+  
+  // 为每个模型创建训练中状态（用于控制按钮禁用和持续轮询）
+  const [dlTraining, setDlTraining] = useState(false);
+  const [mlTraining, setMlTraining] = useState(false);
+  const [mathTraining, setMathTraining] = useState(false);
+  const [bertTraining, setBertTraining] = useState(false);
+  const [feTraining, setFeTraining] = useState(false);
+  
   const [messageApi, contextHolder] = message.useMessage();
+
+  // 监听训练状态变化，训练完成或失败时重置训练中状态
+  useEffect(() => {
+    if (dlTrainingStatus?.status === 'finished' || dlTrainingStatus?.status === 'failed' || dlTrainingStatus?.status === 'error') {
+      setDlTraining(false);
+    }
+  }, [dlTrainingStatus]);
+
+  useEffect(() => {
+    if (mlTrainingStatus?.status === 'finished' || mlTrainingStatus?.status === 'failed' || mlTrainingStatus?.status === 'error') {
+      setMlTraining(false);
+    }
+  }, [mlTrainingStatus]);
+
+  useEffect(() => {
+    if (mathTrainingStatus?.status === 'finished' || mathTrainingStatus?.status === 'failed' || mathTrainingStatus?.status === 'error') {
+      setMathTraining(false);
+    }
+  }, [mathTrainingStatus]);
+
+  useEffect(() => {
+    if (bertTrainingStatus?.status === 'finished' || bertTrainingStatus?.status === 'failed' || bertTrainingStatus?.status === 'error') {
+      setBertTraining(false);
+    }
+  }, [bertTrainingStatus]);
+
+  useEffect(() => {
+    if (feTrainingStatus?.status === 'finished' || feTrainingStatus?.status === 'failed' || feTrainingStatus?.status === 'error') {
+      setFeTraining(false);
+    }
+  }, [feTrainingStatus]);
 
   // 提交深度学习训练任务
   const handleTrainDL = async () => {
     try {
-      const values = await form.validateFields();
-      setLoading(true);
+      const values = await dlForm.validateFields();
+      setDlLoading(true);
       setDlTrainingStatus(null);
 
       const response = await fetch('http://localhost:5000/api/train_dl_model', {
@@ -107,14 +158,16 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       if (result.status === 'success' && result.data?.task_id) {
         const tid = result.data.task_id;
         setDlTaskId(tid);
+        setDlTraining(true); // 设置为训练中状态
         messageApi.success(result.message || '深度学习训练任务已启动');
+        setDlLoading(false);
         // 轮询逻辑已移至 App.tsx，通过 useEffect 自动触发
       } else {
-        setLoading(false);
+        setDlLoading(false);
         messageApi.error(result.message || '启动训练任务失败');
       }
     } catch (error) {
-      setLoading(false);
+      setDlLoading(false);
       console.error('训练失败:', error);
       messageApi.error('训练请求失败');
     }
@@ -123,8 +176,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
   // 提交机器学习训练任务
   const handleTrainML = async () => {
     try {
-      const values = await form.validateFields();
-      setLoading(true);
+      const values = await mlForm.validateFields();
+      setMlLoading(true);
       setMlTrainingStatus(null);
 
       const response = await fetch('http://localhost:5000/api/train_ml_model', {
@@ -138,14 +191,16 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       if (result.status === 'success' && result.data?.task_id) {
         const tid = result.data.task_id;
         setMlTaskId(tid);
+        setMlTraining(true); // 设置为训练中状态
         messageApi.success(result.message || '机器学习训练任务已启动');
+        setMlLoading(false);
         // 轮询逻辑已移至 App.tsx
       } else {
-        setLoading(false);
+        setMlLoading(false);
         messageApi.error(result.message || '启动训练任务失败');
       }
     } catch (error) {
-      setLoading(false);
+      setMlLoading(false);
       console.error('训练失败:', error);
       messageApi.error('训练请求失败');
     }
@@ -154,8 +209,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
   // 提交数学模型训练任务
   const handleTrainMath = async () => {
     try {
-      const values = await form.validateFields();
-      setLoading(true);
+      const values = await mathForm.validateFields();
+      setMathLoading(true);
       setMathTrainingStatus(null);
 
       const response = await fetch('http://localhost:5000/api/train_math_model', {
@@ -169,14 +224,16 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       if (result.status === 'success' && result.data?.task_id) {
         const tid = result.data.task_id;
         setMathTaskId(tid);
+        setMathTraining(true); // 设置为训练中状态
         messageApi.success(result.message || '数学模型训练任务已启动');
+        setMathLoading(false);
         // 轮询逻辑已移至 App.tsx
       } else {
-        setLoading(false);
+        setMathLoading(false);
         messageApi.error(result.message || '启动训练任务失败');
       }
     } catch (error) {
-      setLoading(false);
+      setMathLoading(false);
       console.error('训练失败:', error);
       messageApi.error('训练请求失败');
     }
@@ -185,8 +242,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
   // 提交BERT模型训练任务
   const handleTrainBert = async () => {
     try {
-      const values = await form.validateFields();
-      setLoading(true);
+      const values = await bertForm.validateFields();
+      setBertLoading(true);
       setBertTrainingStatus(null);
 
       const response = await fetch('http://localhost:5000/api/train_bert_model', {
@@ -200,14 +257,16 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       if (result.status === 'success' && result.data?.task_id) {
         const tid = result.data.task_id;
         setBertTaskId(tid);
+        setBertTraining(true); // 设置为训练中状态
         messageApi.success(result.message || 'BERT模型训练任务已启动');
+        setBertLoading(false);
         // 轮询逻辑已移至 App.tsx
       } else {
-        setLoading(false);
+        setBertLoading(false);
         messageApi.error(result.message || '启动训练任务失败');
       }
     } catch (error) {
-      setLoading(false);
+      setBertLoading(false);
       console.error('训练失败:', error);
       messageApi.error('训练请求失败');
     }
@@ -216,6 +275,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
   // 特征工程训练
   const handleTrainFeature = async (values: any) => {
     try {
+      setFeLoading(true);
       message.loading('正在构建地理特征...', 0);
       
       // 第一步：构建地理特征
@@ -304,12 +364,16 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
           message: '特征工程训练已启动',
           result: null
         });
+        setFeTraining(true); // 设置为训练中状态
         message.success('特征工程训练已启动');
+        setFeLoading(false);
         // 轮询逻辑已移至 App.tsx
       } else {
+        setFeLoading(false);
         throw new Error(result.message || '特征工程训练启动失败');
       }
     } catch (error: any) {
+      setFeLoading(false);
       message.error(`特征工程训练失败: ${error.message}`);
       console.error('特征工程训练失败:', error);
     }
@@ -322,11 +386,11 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
         return (
           <Card title="深度学习模型训练配置">
             <Form
-              form={form}
+              key="dl_form"
+              form={dlForm}
               layout="vertical"
+              autoComplete="off"
               initialValues={{
-                train_csv: '../data/samples/train_samples_seq10_out1_overlap1_ratio7.csv',
-                test_csv: '../data/samples/test_samples_seq10_out1_overlap1_ratio7.csv',
                 lr: 0.001,
                 batch_size: 32,
                 epochs: 3,
@@ -345,7 +409,6 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
                   <Select.Option value="lstm">LSTM</Select.Option>
                   <Select.Option value="gru">GRU</Select.Option>
                   <Select.Option value="tcn">TCN</Select.Option>
-                  <Select.Option value="transformer">Transformer</Select.Option>
                 </Select>
               </Form.Item>
 
@@ -420,8 +483,14 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               </Form.Item>
 
               <Form.Item>
-                <Button type="primary" onClick={handleTrainDL} loading={loading} block>
-                  开始训练
+                <Button 
+                  type="primary" 
+                  onClick={handleTrainDL} 
+                  loading={dlLoading} 
+                  disabled={dlTraining}
+                  block
+                >
+                  {dlTraining ? '训练中...' : '开始训练'}
                 </Button>
               </Form.Item>
             </Form>
@@ -431,12 +500,12 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
         return (
           <Card title="机器学习模型训练配置">
             <Form
-              form={form}
+              key="ml_form"
+              form={mlForm}
               layout="vertical"
+              autoComplete="off"
               initialValues={{
                 model_name: 'ridge',
-                train_csv: '../data/samples/train_samples_seq10_out1_overlap1_ratio7.csv',
-                test_csv: '../data/samples/test_samples_seq10_out1_overlap1_ratio7.csv',
                 batch_size: 64,
                 verbose: true,
                 plot_figures: false,
@@ -499,8 +568,14 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               </Form.Item>
 
               <Form.Item>
-                <Button type="primary" onClick={handleTrainML} loading={loading} block>
-                  开始训练
+                <Button 
+                  type="primary" 
+                  onClick={handleTrainML} 
+                  loading={mlLoading} 
+                  disabled={mlTraining}
+                  block
+                >
+                  {mlTraining ? '训练中...' : '开始训练'}
                 </Button>
               </Form.Item>
             </Form>
@@ -510,12 +585,12 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
         return (
           <Card title="数学模型训练配置">
             <Form
-              form={form}
+              key="math_form"
+              form={mathForm}
               layout="vertical"
+              autoComplete="off"
               initialValues={{
                 model_name: 'persistence',
-                train_csv: '../data/samples/train_samples_seq10_out1_overlap1_ratio7.csv',
-                test_csv: '../data/samples/test_samples_seq10_out1_overlap1_ratio7.csv',
                 batch_size: 64,
                 verbose: true,
                 max_display_points: 8000,
@@ -573,8 +648,14 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               </Form.Item>
 
               <Form.Item>
-                <Button type="primary" onClick={handleTrainMath} loading={loading} block>
-                  开始训练
+                <Button 
+                  type="primary" 
+                  onClick={handleTrainMath} 
+                  loading={mathLoading} 
+                  disabled={mathTraining}
+                  block
+                >
+                  {mathTraining ? '训练中...' : '开始训练'}
                 </Button>
               </Form.Item>
             </Form>
@@ -584,8 +665,10 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
         return (
           <Card title="BERT大模型微调配置">
             <Form
-              form={form}
+              key="bert_form"
+              form={bertForm}
               layout="vertical"
+              autoComplete="off"
               initialValues={{
                 train_csv: 'D:/article/software_engineering/data/train.csv',
                 test_csv: 'D:/article/software_engineering/data/test.csv',
@@ -643,8 +726,14 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               </Form.Item>
 
               <Form.Item>
-                <Button type="primary" onClick={handleTrainBert} loading={loading} block>
-                  开始训练
+                <Button 
+                  type="primary" 
+                  onClick={handleTrainBert} 
+                  loading={bertLoading} 
+                  disabled={bertTraining}
+                  block
+                >
+                  {bertTraining ? '训练中...' : '开始训练'}
                 </Button>
               </Form.Item>
             </Form>
@@ -655,7 +744,10 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
         return (
           <Card title="特征工程配置">
             <Form
+              key="fe_form"
+              form={feForm}
               layout="vertical"
+              autoComplete="off"
               onFinish={handleTrainFeature}
               initialValues={{
                 model_name: 'lgb',
@@ -679,7 +771,13 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               }}
             >
               <Form.Item label="模型名称" name="model_name" rules={[{ required: true }]}>
-                <Input placeholder="例如: lgb" />
+                <Select placeholder="请选择模型" allowClear>
+                  <Select.Option value="lgb">LGB</Select.Option>
+                  <Select.Option value="xgb">XGB</Select.Option>
+                  <Select.Option value="cat">CatBoost</Select.Option>
+                  <Select.Option value="rf">RandomForest</Select.Option>
+                  <Select.Option value="linear">Linear</Select.Option>
+                </Select>
               </Form.Item>
 
               <Typography.Title level={5}>特征选择</Typography.Title>
@@ -767,8 +865,14 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               </Form.Item>
 
               <Form.Item>
-                <Button type="primary" htmlType="submit" block>
-                  开始训练
+                <Button 
+                  type="primary" 
+                  htmlType="submit" 
+                  loading={feLoading} 
+                  disabled={feTraining}
+                  block
+                >
+                  {feTraining ? '训练中...' : '开始训练'}
                 </Button>
               </Form.Item>
             </Form>
@@ -996,14 +1100,14 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       case 'dl_training':
         return (
           <>
-            {loading && dlTrainingStatus && (
+            {(dlTraining || dlTrainingStatus?.status === 'running' || dlTrainingStatus?.status === 'waiting') && dlTrainingStatus && (
               <Card title="训练进度" style={{ marginBottom: 20 }}>
-                <Spin spinning={dlTrainingStatus.status === 'running'}>
+                <Spin spinning={dlTrainingStatus.status === 'running' || dlTrainingStatus.status === 'waiting'}>
                   <div style={{ marginBottom: 16 }}>
                     <div>任务ID: {dlTaskId}</div>
                     <div>状态: {dlTrainingStatus.message}</div>
                   </div>
-                  <Progress percent={dlTrainingStatus.progress} status={dlTrainingStatus.status === 'running' ? 'active' : 'success'} />
+                  <Progress percent={dlTrainingStatus.progress} status={dlTrainingStatus.status === 'running' || dlTrainingStatus.status === 'waiting' ? 'active' : 'success'} />
                 </Spin>
               </Card>
             )}
@@ -1053,7 +1157,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
                   ]}
                 />
               </>
-            ) : !loading ? (
+            ) : !dlTraining && !dlTrainingStatus ? (
               <div style={{ textAlign: 'center', padding: '50px', color: '#999' }}>
                 <RocketOutlined style={{ fontSize: '48px', marginBottom: '16px' }} />
                 <Typography.Title level={4} style={{ color: '#999' }}>
@@ -1069,9 +1173,9 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       case 'ml_training':
         return (
           <>
-            {loading && mlTrainingStatus && (
+            {(mlTraining || mlTrainingStatus?.status === 'running' || mlTrainingStatus?.status === 'waiting') && mlTrainingStatus && (
               <Card title="训练进度" style={{ marginBottom: 20 }}>
-                <Spin spinning={mlTrainingStatus.status === 'running'}>
+                <Spin spinning={mlTrainingStatus.status === 'running' || mlTrainingStatus.status === 'waiting'}>
                   <div style={{ marginBottom: 16 }}>
                     <div>任务ID: {mlTaskId}</div>
                     <div>状态: {mlTrainingStatus.message}</div>
@@ -1126,7 +1230,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
                   ]}
                 />
               </>
-            ) : !loading ? (
+            ) : !mlLoading ? (
               <div style={{ textAlign: 'center', padding: '50px', color: '#999' }}>
                 <ThunderboltOutlined style={{ fontSize: '48px', marginBottom: '16px' }} />
                 <Typography.Title level={4} style={{ color: '#999' }}>
@@ -1142,9 +1246,9 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       case 'math_training':
         return (
           <>
-            {loading && mathTrainingStatus && (
+            {(mathTraining || mathTrainingStatus?.status === 'running' || mathTrainingStatus?.status === 'waiting') && mathTrainingStatus && (
               <Card title="训练进度" style={{ marginBottom: 20 }}>
-                <Spin spinning={mathTrainingStatus.status === 'running'}>
+                <Spin spinning={mathTrainingStatus.status === 'running' || mathTrainingStatus.status === 'waiting'}>
                   <div style={{ marginBottom: 16 }}>
                     <div>任务ID: {mathTaskId}</div>
                     <div>状态: {mathTrainingStatus.message}</div>
@@ -1199,7 +1303,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
                   ]}
                 />
               </>
-            ) : !loading ? (
+            ) : !mathTraining && !mathTrainingStatus ? (
               <div style={{ textAlign: 'center', padding: '50px', color: '#999' }}>
                 <ExperimentOutlined style={{ fontSize: '48px', marginBottom: '16px' }} />
                 <Typography.Title level={4} style={{ color: '#999' }}>
@@ -1215,7 +1319,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       case 'bert_training':
         return (
           <>
-            {loading && !bertTrainingStatus && (
+            {bertLoading && !bertTrainingStatus && (
               <div style={{ textAlign: 'center', padding: '50px' }}>
                 <Spin size="large" />
                 <Typography.Title level={4} style={{ marginTop: 20 }}>
@@ -1224,7 +1328,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               </div>
             )}
 
-            {bertTrainingStatus && (
+            {(bertTraining || bertTrainingStatus) && bertTrainingStatus && (
               <Card title="训练进度" style={{ marginBottom: 20 }}>
                 <Progress 
                   percent={bertTrainingStatus.progress} 
@@ -1285,7 +1389,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
                   ]}
                 />
               </>
-            ) : !loading ? (
+            ) : !bertTraining && !bertTrainingStatus ? (
               <div style={{ textAlign: 'center', padding: '50px', color: '#999' }}>
                 <BulbOutlined style={{ fontSize: '48px', marginBottom: '16px' }} />
                 <Typography.Title level={4} style={{ color: '#999' }}>
@@ -1411,7 +1515,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
                   </Typography.Text>
                 </div>
               </Card>
-            ) : !loading ? (
+            ) : !feTraining && !feTrainingStatus ? (
               <div style={{ textAlign: 'center', padding: '50px', color: '#999' }}>
                 <ToolOutlined style={{ fontSize: '48px', marginBottom: '16px' }} />
                 <Typography.Title level={4} style={{ color: '#999' }}>
@@ -1461,7 +1565,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
             {renderSiderContent()}
           </Sider>
           <Content style={{ background: '#fff', padding: '20px', overflow: 'auto', height: '75%' }}>
-            {loading && !dlTrainingStatus && !mlTrainingStatus && !mathTrainingStatus && !bertTrainingStatus && !feTrainingStatus ? (
+            {(dlLoading || mlLoading || mathLoading || bertLoading || feLoading) && !dlTrainingStatus && !mlTrainingStatus && !mathTrainingStatus && !bertTrainingStatus && !feTrainingStatus ? (
               <div style={{ textAlign: 'center', padding: '50px' }}>
                 <Spin size="large" tip="训练中..." />
               </div>
