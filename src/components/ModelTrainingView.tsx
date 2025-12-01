@@ -663,7 +663,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
         );
       case 'bert_training':
         return (
-          <Card title="BERT大模型微调配置">
+          <Card title="大模型微调配置">
             <Form
               key="bert_form"
               form={bertForm}
@@ -1547,7 +1547,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
             { key: 'dl_training', label: '深度学习训练', icon: <RocketOutlined /> },
             { key: 'ml_training', label: '机器学习训练', icon: <ThunderboltOutlined /> },
             { key: 'math_training', label: '数学模型训练', icon: <FunctionOutlined /> },
-            { key: 'bert_training', label: 'BERT大模型训练', icon: <BulbOutlined /> },
+            { key: 'bert_training', label: '大模型训练', icon: <BulbOutlined /> },
             { key: 'feature_engineering', label: '特征工程', icon: <ToolOutlined /> },
           ]}
         />
