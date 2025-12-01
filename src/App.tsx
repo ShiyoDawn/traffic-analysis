@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Layout, Form, Typography, Space, Upload, message, Button, Steps, Radio } from 'antd';
 import { GithubOutlined, MailOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
@@ -208,6 +208,13 @@ function App() {
   const timeoutRef = useRef<number | null>(null);
   const [isStarted, setIsStarted] = useState(false);
 
+  // 为每个模型创建独立的轮询定时器
+  const dlPollingRef = useRef<number | null>(null);
+  const mlPollingRef = useRef<number | null>(null);
+  const mathPollingRef = useRef<number | null>(null);
+  const bertPollingRef = useRef<number | null>(null);
+  const fePollingRef = useRef<number | null>(null);
+
 
   // 城市选择状态
   const [selectedCity, setSelectedCity] = useState<CityType>('milan');
@@ -257,6 +264,177 @@ function App() {
   const [dlPredictionData, setDlPredictionData] = useState<any>(null);
   const [mlPredictionData, setMlPredictionData] = useState<any>(null);
   const [mathPredictionData, setMathPredictionData] = useState<any>(null);
+
+  // 组件卸载时清除所有轮询定时器
+  useEffect(() => {
+    return () => {
+      if (dlPollingRef.current) clearInterval(dlPollingRef.current);
+      if (mlPollingRef.current) clearInterval(mlPollingRef.current);
+      if (mathPollingRef.current) clearInterval(mathPollingRef.current);
+      if (bertPollingRef.current) clearInterval(bertPollingRef.current);
+      if (fePollingRef.current) clearInterval(fePollingRef.current);
+    };
+  }, []);
+
+  // 深度学习模型轮询
+  useEffect(() => {
+    if (dlTaskId && dlTrainingStatus?.status !== 'finished' && dlTrainingStatus?.status !== 'failed') {
+      const pollStatus = async () => {
+        try {
+          const response = await fetch('http://localhost:5000/api/train_status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ task_id: dlTaskId })
+          });
+          const result = await response.json();
+          if (result.status === 'success' && result.data) {
+            setDlTrainingStatus(result.data);
+            if (result.data.status === 'finished' || result.data.status === 'failed') {
+              if (dlPollingRef.current) {
+                clearInterval(dlPollingRef.current);
+                dlPollingRef.current = null;
+              }
+            }
+          }
+        } catch (error) {
+          console.error('DL轮询失败:', error);
+        }
+      };
+      pollStatus();
+      dlPollingRef.current = window.setInterval(pollStatus, 2000);
+      return () => {
+        if (dlPollingRef.current) clearInterval(dlPollingRef.current);
+      };
+    }
+  }, [dlTaskId]);
+
+  // 机器学习模型轮询
+  useEffect(() => {
+    if (mlTaskId && mlTrainingStatus?.status !== 'finished' && mlTrainingStatus?.status !== 'failed') {
+      const pollStatus = async () => {
+        try {
+          const response = await fetch('http://localhost:5000/api/train_status_ml', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ task_id: mlTaskId })
+          });
+          const result = await response.json();
+          if (result.status === 'success' && result.data) {
+            setMlTrainingStatus(result.data);
+            if (result.data.status === 'finished' || result.data.status === 'failed') {
+              if (mlPollingRef.current) {
+                clearInterval(mlPollingRef.current);
+                mlPollingRef.current = null;
+              }
+            }
+          }
+        } catch (error) {
+          console.error('ML轮询失败:', error);
+        }
+      };
+      pollStatus();
+      mlPollingRef.current = window.setInterval(pollStatus, 2000);
+      return () => {
+        if (mlPollingRef.current) clearInterval(mlPollingRef.current);
+      };
+    }
+  }, [mlTaskId]);
+
+  // 数学模型轮询
+  useEffect(() => {
+    if (mathTaskId && mathTrainingStatus?.status !== 'finished' && mathTrainingStatus?.status !== 'failed') {
+      const pollStatus = async () => {
+        try {
+          const response = await fetch('http://localhost:5000/api/train_math_status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ task_id: mathTaskId })
+          });
+          const result = await response.json();
+          if (result.status === 'success' && result.data) {
+            setMathTrainingStatus(result.data);
+            if (result.data.status === 'finished' || result.data.status === 'failed') {
+              if (mathPollingRef.current) {
+                clearInterval(mathPollingRef.current);
+                mathPollingRef.current = null;
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Math轮询失败:', error);
+        }
+      };
+      pollStatus();
+      mathPollingRef.current = window.setInterval(pollStatus, 2000);
+      return () => {
+        if (mathPollingRef.current) clearInterval(mathPollingRef.current);
+      };
+    }
+  }, [mathTaskId]);
+
+  // BERT模型轮询
+  useEffect(() => {
+    if (bertTaskId && bertTrainingStatus?.status !== 'finished' && bertTrainingStatus?.status !== 'failed') {
+      const pollStatus = async () => {
+        try {
+          const response = await fetch('http://localhost:5000/api/train_status_bert', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ task_id: bertTaskId })
+          });
+          const result = await response.json();
+          if (result.status === 'success' && result.data) {
+            setBertTrainingStatus(result.data);
+            if (result.data.status === 'finished' || result.data.status === 'failed') {
+              if (bertPollingRef.current) {
+                clearInterval(bertPollingRef.current);
+                bertPollingRef.current = null;
+              }
+            }
+          }
+        } catch (error) {
+          console.error('BERT轮询失败:', error);
+        }
+      };
+      pollStatus();
+      bertPollingRef.current = window.setInterval(pollStatus, 2000);
+      return () => {
+        if (bertPollingRef.current) clearInterval(bertPollingRef.current);
+      };
+    }
+  }, [bertTaskId]);
+
+  // 特征工程模型轮询
+  useEffect(() => {
+    if (feTaskId && feTrainingStatus?.status !== 'finished' && feTrainingStatus?.status !== 'failed') {
+      const pollStatus = async () => {
+        try {
+          const response = await fetch('http://localhost:5000/api/train_feature_status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ task_id: feTaskId })
+          });
+          const result = await response.json();
+          if (result.status === 'success' && result.data) {
+            setFeTrainingStatus(result.data);
+            if (result.data.status === 'finished' || result.data.status === 'failed') {
+              if (fePollingRef.current) {
+                clearInterval(fePollingRef.current);
+                fePollingRef.current = null;
+              }
+            }
+          }
+        } catch (error) {
+          console.error('FE轮询失败:', error);
+        }
+      };
+      pollStatus();
+      fePollingRef.current = window.setInterval(pollStatus, 2000);
+      return () => {
+        if (fePollingRef.current) clearInterval(fePollingRef.current);
+      };
+    }
+  }, [feTaskId]);
 
   const handleChromosomeChange = (value: string) => {
     setMaxLength(chromosome_lengths[value]);

@@ -1,5 +1,5 @@
 import { Layout, Typography, Menu, Form, Select, Input, InputNumber, Button, Card, Spin, message, Progress, Tabs, Checkbox } from 'antd';
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { RocketOutlined, ThunderboltOutlined, ExperimentOutlined, FunctionOutlined, BulbOutlined, ToolOutlined } from '@ant-design/icons';
 import ReactECharts from 'echarts-for-react';
 import type { CityConfig } from '../App';
@@ -87,61 +87,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
   const [currentMenu, setCurrentMenu] = useState('dl_training');
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const pollingTimerRef = useRef<number | null>(null);
   const [messageApi, contextHolder] = message.useMessage();
-
-  // 组件卸载时清除轮询
-  useEffect(() => {
-    return () => {
-      if (pollingTimerRef.current) {
-        clearInterval(pollingTimerRef.current);
-      }
-    };
-  }, []);
-
-  // 开始轮询深度学习训练状态
-  const startPolling = (tid: string) => {
-    if (pollingTimerRef.current) {
-      clearInterval(pollingTimerRef.current);
-    }
-
-    const pollStatus = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/train_status', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ task_id: tid })
-        });
-
-        const result = await response.json();
-        if (result.status === 'success' && result.data) {
-          setDlTrainingStatus(result.data);
-
-          // 如果训练完成或失败，停止轮询
-          if (result.data.status === 'finished' || result.data.status === 'failed') {
-            if (pollingTimerRef.current) {
-              clearInterval(pollingTimerRef.current);
-              pollingTimerRef.current = null;
-            }
-            setLoading(false);
-
-            if (result.data.status === 'finished') {
-              message.success('深度学习模型训练完成！');
-            } else {
-              message.error('深度学习模型训练失败：' + result.data.message);
-            }
-          }
-        }
-      } catch (error) {
-        console.error('轮询训练状态失败:', error);
-      }
-    };
-
-    // 立即执行一次
-    pollStatus();
-    // 每2秒轮询一次
-    pollingTimerRef.current = window.setInterval(pollStatus, 2000);
-  };
 
   // 提交深度学习训练任务
   const handleTrainDL = async () => {
@@ -162,7 +108,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
         const tid = result.data.task_id;
         setDlTaskId(tid);
         messageApi.success(result.message || '深度学习训练任务已启动');
-        startPolling(tid);
+        // 轮询逻辑已移至 App.tsx，通过 useEffect 自动触发
       } else {
         setLoading(false);
         messageApi.error(result.message || '启动训练任务失败');
@@ -193,7 +139,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
         const tid = result.data.task_id;
         setMlTaskId(tid);
         messageApi.success(result.message || '机器学习训练任务已启动');
-        startPollingML(tid);
+        // 轮询逻辑已移至 App.tsx
       } else {
         setLoading(false);
         messageApi.error(result.message || '启动训练任务失败');
@@ -203,50 +149,6 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       console.error('训练失败:', error);
       messageApi.error('训练请求失败');
     }
-  };
-
-  // 开始轮询机器学习训练状态
-  const startPollingML = (tid: string) => {
-    if (pollingTimerRef.current) {
-      clearInterval(pollingTimerRef.current);
-    }
-
-    const pollStatus = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/train_status_ml', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ task_id: tid })
-        });
-
-        const result = await response.json();
-        if (result.status === 'success' && result.data) {
-          setMlTrainingStatus(result.data);
-
-          // 如果训练完成或失败，停止轮询
-          if (result.data.status === 'finished' || result.data.status === 'failed') {
-            if (pollingTimerRef.current) {
-              clearInterval(pollingTimerRef.current);
-              pollingTimerRef.current = null;
-            }
-            setLoading(false);
-
-            if (result.data.status === 'finished') {
-              message.success('机器学习模型训练完成！');
-            } else {
-              message.error('机器学习模型训练失败：' + result.data.message);
-            }
-          }
-        }
-      } catch (error) {
-        console.error('轮询训练状态失败:', error);
-      }
-    };
-
-    // 立即执行一次
-    pollStatus();
-    // 每2秒轮询一次
-    pollingTimerRef.current = window.setInterval(pollStatus, 2000);
   };
 
   // 提交数学模型训练任务
@@ -268,7 +170,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
         const tid = result.data.task_id;
         setMathTaskId(tid);
         messageApi.success(result.message || '数学模型训练任务已启动');
-        startPollingMath(tid);
+        // 轮询逻辑已移至 App.tsx
       } else {
         setLoading(false);
         messageApi.error(result.message || '启动训练任务失败');
@@ -278,50 +180,6 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       console.error('训练失败:', error);
       messageApi.error('训练请求失败');
     }
-  };
-
-  // 开始轮询数学模型训练状态
-  const startPollingMath = (tid: string) => {
-    if (pollingTimerRef.current) {
-      clearInterval(pollingTimerRef.current);
-    }
-
-    const pollStatus = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/train_math_status', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ task_id: tid })
-        });
-
-        const result = await response.json();
-        if (result.status === 'success' && result.data) {
-          setMathTrainingStatus(result.data);
-
-          // 如果训练完成或失败，停止轮询
-          if (result.data.status === 'finished' || result.data.status === 'failed') {
-            if (pollingTimerRef.current) {
-              clearInterval(pollingTimerRef.current);
-              pollingTimerRef.current = null;
-            }
-            setLoading(false);
-
-            if (result.data.status === 'finished') {
-              message.success('数学模型训练完成！');
-            } else {
-              message.error('数学模型训练失败：' + result.data.message);
-            }
-          }
-        }
-      } catch (error) {
-        console.error('轮询训练状态失败:', error);
-      }
-    };
-
-    // 立即执行一次
-    pollStatus();
-    // 每2秒轮询一次
-    pollingTimerRef.current = window.setInterval(pollStatus, 2000);
   };
 
   // 提交BERT模型训练任务
@@ -343,7 +201,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
         const tid = result.data.task_id;
         setBertTaskId(tid);
         messageApi.success(result.message || 'BERT模型训练任务已启动');
-        startPollingBert(tid);
+        // 轮询逻辑已移至 App.tsx
       } else {
         setLoading(false);
         messageApi.error(result.message || '启动训练任务失败');
@@ -353,50 +211,6 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       console.error('训练失败:', error);
       messageApi.error('训练请求失败');
     }
-  };
-
-  // 开始轮询BERT模型训练状态
-  const startPollingBert = (tid: string) => {
-    if (pollingTimerRef.current) {
-      clearInterval(pollingTimerRef.current);
-    }
-
-    const pollStatus = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/train_status_bert', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ task_id: tid })
-        });
-
-        const result = await response.json();
-        if (result.status === 'success' && result.data) {
-          setBertTrainingStatus(result.data);
-
-          // 如果训练完成或失败，停止轮询
-          if (result.data.status === 'finished' || result.data.status === 'failed') {
-            if (pollingTimerRef.current) {
-              clearInterval(pollingTimerRef.current);
-              pollingTimerRef.current = null;
-            }
-            setLoading(false);
-
-            if (result.data.status === 'finished') {
-              message.success('BERT模型训练完成！');
-            } else {
-              message.error('BERT模型训练失败：' + result.data.message);
-            }
-          }
-        }
-      } catch (error) {
-        console.error('轮询训练状态失败:', error);
-      }
-    };
-
-    // 立即执行一次
-    pollStatus();
-    // 每2秒轮询一次
-    pollingTimerRef.current = window.setInterval(pollStatus, 2000);
   };
 
   // 特征工程训练
@@ -491,7 +305,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
           result: null
         });
         message.success('特征工程训练已启动');
-        startPollingFeature(taskId);
+        // 轮询逻辑已移至 App.tsx
       } else {
         throw new Error(result.message || '特征工程训练启动失败');
       }
@@ -499,50 +313,6 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       message.error(`特征工程训练失败: ${error.message}`);
       console.error('特征工程训练失败:', error);
     }
-  };
-
-  // 轮询特征工程训练状态
-  const startPollingFeature = (taskId: string) => {
-    if (pollingTimerRef.current) {
-      clearInterval(pollingTimerRef.current);
-    }
-
-    const pollStatus = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/train_status_feature', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ task_id: taskId })
-        });
-        if (response.ok) {
-          const result = await response.json();
-          if (result.status === 'success' && result.data) {
-            const statusData = result.data;
-            setFeTrainingStatus(statusData);
-
-            // 如果训练完成或失败，停止轮询
-            if (statusData.status === 'finished' || statusData.status === 'failed' || statusData.status === 'error') {
-              if (pollingTimerRef.current) {
-                clearInterval(pollingTimerRef.current);
-                pollingTimerRef.current = null;
-              }
-              if (statusData.status === 'finished') {
-                message.success('特征工程训练完成！');
-              } else {
-                message.error(statusData.message || '特征工程训练失败');
-              }
-            }
-          }
-        }
-      } catch (error) {
-        console.error('轮询训练状态失败:', error);
-      }
-    };
-
-    // 立即执行一次
-    pollStatus();
-    // 每2秒轮询一次
-    pollingTimerRef.current = window.setInterval(pollStatus, 2000);
   };
 
   // 渲染侧边栏配置内容
@@ -817,8 +587,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               form={form}
               layout="vertical"
               initialValues={{
-                train_csv: '../data/samples/train_samples_seq10_out1_overlap1_ratio7.csv',
-                test_csv: '../data/samples/test_samples_seq10_out1_overlap1_ratio7.csv',
+                train_csv: 'D:/article/software_engineering/data/train.csv',
+                test_csv: 'D:/article/software_engineering/data/test.csv',
                 bert_path: 'D:/article/software_engineering/bert',
                 epochs: 3,
                 batch_size: 8,
@@ -837,8 +607,13 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
                 <Input placeholder="测试数据CSV文件路径" />
               </Form.Item>
 
-              <Form.Item label="BERT模型路径" name="bert_path" rules={[{ required: true }]}>
-                <Input placeholder="预训练BERT模型路径" />
+             <Form.Item label="选择模型" name="model_type" valuePropName="checked">
+                <Select placeholder="请选择训练使用模型" allowClear>
+                  <Select.Option value={'bert'}>BERT</Select.Option>
+                  <Select.Option value={'qwen'}>QWEN</Select.Option>
+                  <Select.Option value={'llm_embed'}>LLM_embed</Select.Option>
+                  <Select.Option value={'joint'}>Joint</Select.Option>
+                </Select>
               </Form.Item>
 
               <Form.Item label="训练轮次" name="epochs" rules={[{ required: true }]}>
