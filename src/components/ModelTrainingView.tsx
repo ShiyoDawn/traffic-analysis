@@ -147,7 +147,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       setDlLoading(true);
       setDlTrainingStatus(null);
 
-      const response = await fetch('http://localhost:5000/api/train_dl_model', {
+      const response = await fetch('/api/train_dl_model', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values)
@@ -180,7 +180,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       setMlLoading(true);
       setMlTrainingStatus(null);
 
-      const response = await fetch('http://localhost:5000/api/train_ml_model', {
+      const response = await fetch('/api/train_ml_model', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values)
@@ -213,7 +213,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       setMathLoading(true);
       setMathTrainingStatus(null);
 
-      const response = await fetch('http://localhost:5000/api/train_math_model', {
+      const response = await fetch('/api/train_math_model', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values)
@@ -246,7 +246,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       setBertLoading(true);
       setBertTrainingStatus(null);
 
-      const response = await fetch('http://localhost:5000/api/train_bert_model', {
+      const response = await fetch('/api/train_bert_model', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values)
@@ -279,7 +279,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       message.loading('正在构建地理特征...', 0);
       
       // 第一步：构建地理特征
-      const geoResponse = await fetch('http://localhost:5000/api/build_geo_features', {
+      const geoResponse = await fetch('/api/build_geo_features', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -306,11 +306,11 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       // 修改路径：将 /output 改为 /samples，并在 _train.csv 或 _test.csv 前加上 "_code11111111111"
       const modifyPath = (path: string) => {
         // 先替换 /output/ 为 /samples/
-        let modifiedPath = path.replace('/output/', '/samples/');
+        let modifiedPath = path;
         
         // 再在 _train.csv 前加上 _code11111111111
         if (modifiedPath.includes('.csv')) {
-          modifiedPath = modifiedPath.replace('.csv', '_code11111111111.csv');
+          modifiedPath = modifiedPath.replace('.csv', '_code11111111111_train.csv');
         }
         // 在 _test.csv 前加上 _code11111111111
         if (modifiedPath.includes('_test.csv')) {
@@ -321,7 +321,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
       };
 
       // 第二步：训练特征模型
-      const trainResponse = await fetch('http://localhost:5000/api/train_feature_model', {
+      const trainResponse = await fetch('/api/train_feature_model', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -392,6 +392,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               autoComplete="off"
               initialValues={{
                 lr: 0.001,
+                train_csv:'D:\\article\\software_engineering\\data\\samples\\train_samples_seq10_out1_overlap1_ratio7.csv',
+                test_csv:'D:\\article\\software_engineering\\data\\samples\\test_samples_seq10_out1_overlap1_ratio7.csv',
                 batch_size: 32,
                 epochs: 3,
                 early_stop: true,
@@ -507,6 +509,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               initialValues={{
                 model_name: 'ridge',
                 batch_size: 64,
+                train_csv:'D:\\article\\software_engineering\\data\\samples\\train_samples_seq10_out1_overlap1_ratio7.csv',
+                test_csv:'D:\\article\\software_engineering\\data\\samples\\test_samples_seq10_out1_overlap1_ratio7.csv',
                 verbose: true,
                 plot_figures: false,
                 save_dir: './figures',
@@ -591,6 +595,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               autoComplete="off"
               initialValues={{
                 model_name: 'persistence',
+                train_csv:'D:\\article\\software_engineering\\data\\samples\\train_samples_seq10_out1_overlap1_ratio7.csv',
+                test_csv:'D:\\article\\software_engineering\\data\\samples\\test_samples_seq10_out1_overlap1_ratio7.csv',
                 batch_size: 64,
                 verbose: true,
                 max_display_points: 8000,
@@ -670,8 +676,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               layout="vertical"
               autoComplete="off"
               initialValues={{
-                train_csv: 'D:/article/software_engineering/data/train.csv',
-                test_csv: 'D:/article/software_engineering/data/test.csv',
+                train_csv:'D:\\article\\software_engineering\\data\\samples\\train_samples_seq10_out1_overlap1_ratio7.csv',
+                test_csv:'D:\\article\\software_engineering\\data\\samples\\test_samples_seq10_out1_overlap1_ratio7.csv',
                 bert_path: 'D:/article/software_engineering/bert',
                 epochs: 3,
                 batch_size: 8,
@@ -750,6 +756,8 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               autoComplete="off"
               onFinish={handleTrainFeature}
               initialValues={{
+                train_csv:'D:\\article\\software_engineering\\data\\samples\\train_samples_seq10_out1_overlap1_ratio7.csv',
+                test_csv:'D:\\article\\software_engineering\\data\\samples\\test_samples_seq10_out1_overlap1_ratio7.csv',
                 model_name: 'lgb',
                 time_basic: true,
                 weekend: true,

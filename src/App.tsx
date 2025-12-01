@@ -281,11 +281,17 @@ function App() {
     if (dlTaskId && dlTrainingStatus?.status !== 'finished' && dlTrainingStatus?.status !== 'failed' && dlTrainingStatus?.status !== 'error') {
       const pollStatus = async () => {
         try {
-          const response = await fetch('http://localhost:5000/api/train_status', {
+          const response = await fetch('/api/train_status', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ task_id: dlTaskId })
           });
+          
+          if (!response.ok) {
+            console.error(`DL轮询HTTP错误: ${response.status}`);
+            return;
+          }
+          
           const result = await response.json();
           if (result.status === 'success' && result.data) {
             setDlTrainingStatus(result.data);
@@ -313,11 +319,17 @@ function App() {
     if (mlTaskId && mlTrainingStatus?.status !== 'finished' && mlTrainingStatus?.status !== 'failed' && mlTrainingStatus?.status !== 'error') {
       const pollStatus = async () => {
         try {
-          const response = await fetch('http://localhost:5000/api/train_status_ml', {
+          const response = await fetch('/api/train_status_ml', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ task_id: mlTaskId })
           });
+          
+          if (!response.ok) {
+            console.error(`ML轮询HTTP错误: ${response.status}`);
+            return;
+          }
+          
           const result = await response.json();
           if (result.status === 'success' && result.data) {
             setMlTrainingStatus(result.data);
@@ -345,11 +357,17 @@ function App() {
     if (mathTaskId && mathTrainingStatus?.status !== 'finished' && mathTrainingStatus?.status !== 'failed' && mathTrainingStatus?.status !== 'error') {
       const pollStatus = async () => {
         try {
-          const response = await fetch('http://localhost:5000/api/train_math_status', {
+          const response = await fetch('/api/train_math_status', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ task_id: mathTaskId })
           });
+          
+          if (!response.ok) {
+            console.error(`Math轮询HTTP错误: ${response.status}`);
+            return;
+          }
+          
           const result = await response.json();
           if (result.status === 'success' && result.data) {
             setMathTrainingStatus(result.data);
@@ -377,11 +395,17 @@ function App() {
     if (bertTaskId && bertTrainingStatus?.status !== 'finished' && bertTrainingStatus?.status !== 'failed' && bertTrainingStatus?.status !== 'error') {
       const pollStatus = async () => {
         try {
-          const response = await fetch('http://localhost:5000/api/train_status_bert', {
+          const response = await fetch('/api/train_status_bert', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ task_id: bertTaskId })
           });
+          
+          if (!response.ok) {
+            console.error(`BERT轮询HTTP错误: ${response.status}`);
+            return;
+          }
+          
           const result = await response.json();
           if (result.status === 'success' && result.data) {
             setBertTrainingStatus(result.data);
@@ -409,11 +433,24 @@ function App() {
     if (feTaskId && feTrainingStatus?.status !== 'finished' && feTrainingStatus?.status !== 'failed' && feTrainingStatus?.status !== 'error') {
       const pollStatus = async () => {
         try {
-          const response = await fetch('http://localhost:5000/api/train_feature_status', {
+          const response = await fetch('/api/train_status_feature', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ task_id: feTaskId })
           });
+          
+          if (!response.ok) {
+            console.error(`FE轮询HTTP错误: ${response.status} ${response.statusText}`);
+            return;
+          }
+          
+          const contentType = response.headers.get('content-type');
+          if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            console.error('FE轮询返回非JSON:', text.substring(0, 200));
+            return;
+          }
+          
           const result = await response.json();
           if (result.status === 'success' && result.data) {
             setFeTrainingStatus(result.data);

@@ -251,7 +251,7 @@ const ModelPredictionView: React.FC<ModelPredictionViewProps> = ({
         name="test_csv"
         label="测试数据路径"
         rules={[{ required: true, message: '请输入测试数据路径' }]}
-        initialValue="../data/output/test_samples_seq200_out5_overlap1_testevery5.csv"
+        initialValue="D:\article\software_engineering\data\samples\test_samples_seq10_out1_overlap1_ratio7.csv"
       >
         <Input placeholder="例如: ../data/samples/test_samples_seq100_out1_overlap1_testevery5.csv" />
       </Form.Item>
@@ -304,7 +304,7 @@ const ModelPredictionView: React.FC<ModelPredictionViewProps> = ({
         name="test_csv"
         label="测试数据路径"
         rules={[{ required: true, message: '请输入测试数据路径' }]}
-        initialValue="../data/output/test_samples_seq200_out5_overlap1_testevery5.csv"
+        initialValue="D:\article\software_engineering\data\samples\test_samples_seq10_out1_overlap1_ratio7.csv"
       >
         <Input placeholder="例如: ../data/samples/test_samples_seq100_out1_overlap1_testevery5.csv" />
       </Form.Item>
@@ -387,7 +387,7 @@ const ModelPredictionView: React.FC<ModelPredictionViewProps> = ({
         name="test_csv"
         label="测试数据路径"
         rules={[{ required: true, message: '请输入测试数据路径' }]}
-        initialValue="../data/output/test_samples_seq200_out5_overlap1_testevery5.csv"
+        initialValue="D:\article\software_engineering\data\samples\test_samples_seq10_out1_overlap1_ratio7.csv"
       >
         <Input placeholder="例如: ../data/samples/test_samples_seq100_out1_overlap1_testevery5.csv" />
       </Form.Item>
