@@ -258,7 +258,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
         const tid = result.data.task_id;
         setBertTaskId(tid);
         setBertTraining(true); // 设置为训练中状态
-        messageApi.success(result.message || 'BERT模型训练任务已启动');
+        messageApi.success(result.message || '模型训练任务已启动');
         setBertLoading(false);
         // 轮询逻辑已移至 App.tsx
       } else {
@@ -1323,7 +1323,7 @@ const ModelTrainingView: React.FC<ModelTrainingViewProps> = ({
               <div style={{ textAlign: 'center', padding: '50px' }}>
                 <Spin size="large" />
                 <Typography.Title level={4} style={{ marginTop: 20 }}>
-                  正在启动BERT训练任务...
+                  正在启动大模型训练任务...
                 </Typography.Title>
               </div>
             )}

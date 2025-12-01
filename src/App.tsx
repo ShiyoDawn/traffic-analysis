@@ -278,7 +278,7 @@ function App() {
 
   // 深度学习模型轮询
   useEffect(() => {
-    if (dlTaskId && dlTrainingStatus?.status !== 'finished' && dlTrainingStatus?.status !== 'failed') {
+    if (dlTaskId && dlTrainingStatus?.status !== 'finished' && dlTrainingStatus?.status !== 'failed' && dlTrainingStatus?.status !== 'error') {
       const pollStatus = async () => {
         try {
           const response = await fetch('http://localhost:5000/api/train_status', {
@@ -289,7 +289,7 @@ function App() {
           const result = await response.json();
           if (result.status === 'success' && result.data) {
             setDlTrainingStatus(result.data);
-            if (result.data.status === 'finished' || result.data.status === 'failed') {
+            if (result.data.status === 'finished' || result.data.status === 'failed' || result.data.status === 'error') {
               if (dlPollingRef.current) {
                 clearInterval(dlPollingRef.current);
                 dlPollingRef.current = null;
@@ -310,7 +310,7 @@ function App() {
 
   // 机器学习模型轮询
   useEffect(() => {
-    if (mlTaskId && mlTrainingStatus?.status !== 'finished' && mlTrainingStatus?.status !== 'failed') {
+    if (mlTaskId && mlTrainingStatus?.status !== 'finished' && mlTrainingStatus?.status !== 'failed' && mlTrainingStatus?.status !== 'error') {
       const pollStatus = async () => {
         try {
           const response = await fetch('http://localhost:5000/api/train_status_ml', {
@@ -321,7 +321,7 @@ function App() {
           const result = await response.json();
           if (result.status === 'success' && result.data) {
             setMlTrainingStatus(result.data);
-            if (result.data.status === 'finished' || result.data.status === 'failed') {
+            if (result.data.status === 'finished' || result.data.status === 'failed' || result.data.status === 'error') {
               if (mlPollingRef.current) {
                 clearInterval(mlPollingRef.current);
                 mlPollingRef.current = null;
@@ -342,7 +342,7 @@ function App() {
 
   // 数学模型轮询
   useEffect(() => {
-    if (mathTaskId && mathTrainingStatus?.status !== 'finished' && mathTrainingStatus?.status !== 'failed') {
+    if (mathTaskId && mathTrainingStatus?.status !== 'finished' && mathTrainingStatus?.status !== 'failed' && mathTrainingStatus?.status !== 'error') {
       const pollStatus = async () => {
         try {
           const response = await fetch('http://localhost:5000/api/train_math_status', {
@@ -353,7 +353,7 @@ function App() {
           const result = await response.json();
           if (result.status === 'success' && result.data) {
             setMathTrainingStatus(result.data);
-            if (result.data.status === 'finished' || result.data.status === 'failed') {
+            if (result.data.status === 'finished' || result.data.status === 'failed' || result.data.status === 'error') {
               if (mathPollingRef.current) {
                 clearInterval(mathPollingRef.current);
                 mathPollingRef.current = null;
@@ -374,7 +374,7 @@ function App() {
 
   // BERT模型轮询
   useEffect(() => {
-    if (bertTaskId && bertTrainingStatus?.status !== 'finished' && bertTrainingStatus?.status !== 'failed') {
+    if (bertTaskId && bertTrainingStatus?.status !== 'finished' && bertTrainingStatus?.status !== 'failed' && bertTrainingStatus?.status !== 'error') {
       const pollStatus = async () => {
         try {
           const response = await fetch('http://localhost:5000/api/train_status_bert', {
@@ -385,7 +385,7 @@ function App() {
           const result = await response.json();
           if (result.status === 'success' && result.data) {
             setBertTrainingStatus(result.data);
-            if (result.data.status === 'finished' || result.data.status === 'failed') {
+            if (result.data.status === 'finished' || result.data.status === 'failed' || result.data.status === 'error') {
               if (bertPollingRef.current) {
                 clearInterval(bertPollingRef.current);
                 bertPollingRef.current = null;
@@ -393,7 +393,7 @@ function App() {
             }
           }
         } catch (error) {
-          console.error('BERT轮询失败:', error);
+          console.error('大模型训练轮询失败:', error);
         }
       };
       pollStatus();
@@ -406,7 +406,7 @@ function App() {
 
   // 特征工程模型轮询
   useEffect(() => {
-    if (feTaskId && feTrainingStatus?.status !== 'finished' && feTrainingStatus?.status !== 'failed') {
+    if (feTaskId && feTrainingStatus?.status !== 'finished' && feTrainingStatus?.status !== 'failed' && feTrainingStatus?.status !== 'error') {
       const pollStatus = async () => {
         try {
           const response = await fetch('http://localhost:5000/api/train_feature_status', {
@@ -417,7 +417,7 @@ function App() {
           const result = await response.json();
           if (result.status === 'success' && result.data) {
             setFeTrainingStatus(result.data);
-            if (result.data.status === 'finished' || result.data.status === 'failed') {
+            if (result.data.status === 'finished' || result.data.status === 'failed' || result.data.status === 'error') {
               if (fePollingRef.current) {
                 clearInterval(fePollingRef.current);
                 fePollingRef.current = null;
